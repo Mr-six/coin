@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-header>
-        数字货币
+        <p class="header">数字货币项目</p>
       </el-header>
       <el-main>
         <router-view/>
@@ -18,4 +18,7 @@ export default {
 </script>
 
 <style>
+  .header {
+    text-align: center;
+  }
 </style>

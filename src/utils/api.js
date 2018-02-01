@@ -35,4 +35,8 @@ export default {
     return axios(`/redditSub/currencies/${id}/`)
   },
 
+  getTrades () {
+    return axios(`/api/trades`)
+  }
+
 }

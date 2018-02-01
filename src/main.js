@@ -5,13 +5,15 @@ import App from './App'
 import router from './router'
 
 // element ---------------------
-import { Table, TableColumn, Header, Main, Container } from "element-ui"
+import { Table, TableColumn, Header, Main, Container, Tabs, TabPane } from 'element-ui'
 
 Vue.use(Header)
 Vue.use(Main)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Container)
+Vue.use(Tabs)
+Vue.use(TabPane)
 // element ---------------------
 
 // echarts ---------------------
@@ -23,6 +25,8 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/legend'
+import 'echarts/lib/component/dataZoom'
+import 'echarts/lib/component/dataset'
 
 // import 'echarts/lib/chart/pie'
 // import 'echarts/lib/chart/map'

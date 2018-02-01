@@ -4,15 +4,18 @@
 
 const path = require('path')
 
+const tarMoke =
+  'https://www.easy-mock.com/mock/5a6ee3604c02fb3139acf15b/br'
+const tarTest = 'http://127.0.0.1:3001'
+
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/proxy': {
-        target: 'http://coin.mrsix.top/',
+        target: tarTest,
         changeOrigin: true,
         pathRewrite: {
           '^/proxy': ''
@@ -28,7 +31,6 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-
     /**
      * Source Maps
      */
@@ -41,7 +43,7 @@ module.exports = {
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
     cacheBusting: true,
 
-    cssSourceMap: true,
+    cssSourceMap: true
   },
 
   build: {

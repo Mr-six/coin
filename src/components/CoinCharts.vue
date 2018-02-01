@@ -26,10 +26,10 @@ export default {
         },
         yAxis: {},
         dataZoom: [{
-          type: 'inside',
+          type: 'slider',
           xAxisIndex: [0],
           show: true,
-          start: 0,
+          start: 60,
           end: 100,
         }],
         series: [],
