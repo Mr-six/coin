@@ -10,7 +10,7 @@ class HomeController extends Controller {
   async trades () {
     const { app } = this
 
-    const res = await app.mongo.find('trades')
+    const res = await app.mongo.find('trades', {skip: 0, sort: { timestamp: 1 }})
     this.ctx.body = {
       success: true,
       data: res,

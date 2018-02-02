@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 
 // element ---------------------
-import { Table, TableColumn, Header, Main, Container, Tabs, TabPane } from 'element-ui'
+import { Table, TableColumn, Header, Main, Container, Tabs, TabPane, Button} from 'element-ui'
 
 Vue.use(Header)
 Vue.use(Main)
@@ -14,6 +14,7 @@ Vue.use(TableColumn)
 Vue.use(Container)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Button)
 // element ---------------------
 
 // echarts ---------------------

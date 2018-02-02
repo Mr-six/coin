@@ -3,7 +3,7 @@ let baseURL = process.env.NODE_ENV === 'production' ? '/' : '/proxy'
 
 const defaults = {
   baseURL,
-  timeout: 30000,
+  timeout: 100000,
 }
 
 Object.assign(axios.defaults, defaults)
