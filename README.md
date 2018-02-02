@@ -2,20 +2,30 @@
 
 > bricks 的前端展示项目
 
-## Build Setup
+## 依赖
+- node > 8
+- mongodb > 3
+- bricks 数据
+
+## 环境安装
 
 ``` bash
-# install dependencies
-npm install
+# 环境安装 -----------------------------------
+brew install node
 
-# serve with hot reload at localhost:8080
+# 推荐使用 nvm 管理 node
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+nvm install 8
+nvm alias default 8
+
+# 依赖安装 -----------------------------------
+npm install --production
+
+# 启动项目 确保本地 mongodb 服务开启 连接配置： config/config.default.js
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 使用框架
+- [前端 vue](https://cn.vuejs.org/index.html)
+- [node 后端 egg](https://eggjs.org/)
+

@@ -1,7 +1,7 @@
 {
-  "name": "coin",
-  "version": "1.0.0",
-  "description": "A Vue.js project",
+  "name": "bricks-web",
+  "version": "0.0.1",
+  "description": "bricks-web",
   "author": "Mr-six <5069>",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "npm run dev:web",
     "build": "node build/build.js",
     "dev": "egg-bin dev",
-    "dev:test": "npm run build && npm run dev"
+    "dev:server": "npm run build && npm run dev"
   },
   "dependencies": {
     "axios": "^0.17.1",

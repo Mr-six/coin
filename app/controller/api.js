@@ -40,11 +40,18 @@ class HomeController extends Controller {
     })
     let data = {}
 
-    res.forEach(el => {
+    res.forEach(el => {  // 数据买卖分离
       if (!data[el.buyExchange]) data[el.buyExchange] = []
       if (!data[el.sellExchange]) data[el.sellExchange] = []
       data[el.buyExchange].push([el.timestamp, el.buyAmount])
       data[el.sellExchange].push([el.timestamp, el.sellAmount * -1])
+    })
+    Object.keys(data).forEach(el => {
+      data[el].forEach((childEl, i) => {
+        if (i != 0 && res.length > 0) {
+          childEl[1] += data[el][i - 1][1]
+        }
+      })
     })
     this.ctx.body = { success: true, data: data }
   }

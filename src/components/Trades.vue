@@ -6,13 +6,14 @@
 
       <el-button type="primary" icon="el-icon-refresh" @click="getTrades">点击刷新数据</el-button>
 
-      <chart :options="profitItem"></chart>
+      <chart v-if="activeName=='first'" :options="profitItem"></chart>
 
-      <chart :options="totalProfit"></chart>
+      <chart v-if="activeName=='first'" :options="totalProfit"></chart>
 
     </el-tab-pane>
     <el-tab-pane label="交易详情" name="second">
-      <chart :options="accountItem"></chart>
+      <el-button type="primary" icon="el-icon-refresh" @click="getAmount">点击刷新数据</el-button>
+      <chart v-if="activeName=='second'" :options="accountItem"></chart>
     </el-tab-pane>
     <el-tab-pane label="账户详情" name="fourth">
       空
@@ -199,9 +200,7 @@ export default {
       })
       let {data} = await api.getAmount()   // 货币数量
       loadingInstance.close()              // 关闭loading
-      console.log(data)
       let items = Object.keys(data.data)
-      console.log(items)
       this.accountItem.legend.data = items
       items.forEach(el => {
         this.accountItem.series.push({
