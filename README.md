@@ -1,6 +1,6 @@
-# coin
+# bricks-web
 
-> A Vue.js project
+> bricks 的前端展示项目
 
 ## Build Setup
 

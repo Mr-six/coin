@@ -1,8 +1,8 @@
 <template>
 <div>
 
-  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="交易详情" name="first">
+  <el-tabs v-model="activeName" @tab-click="handleTabClick">
+    <el-tab-pane label="收益详情" name="first">
 
       <el-button type="primary" icon="el-icon-refresh" @click="getTrades">点击刷新数据</el-button>
 
@@ -10,12 +10,11 @@
 
       <chart :options="totalProfit"></chart>
 
+    </el-tab-pane>
+    <el-tab-pane label="交易详情" name="second">
       <chart :options="accountItem"></chart>
     </el-tab-pane>
-    <el-tab-pane label="账户详情" name="second">
-      待更新
-    </el-tab-pane>
-    <el-tab-pane label="交易汇总" name="fourth">
+    <el-tab-pane label="账户详情" name="fourth">
       空
     </el-tab-pane>
   </el-tabs>
@@ -102,11 +101,11 @@ export default {
       },
       accountItem: {
         title: {
-          text: 'btc汇总'
+          text: '货币钱包汇总'
         },
         tooltip: {},
         legend: {
-          data:['bitfinex-btc', 'gdax-btc']
+          data:['bitfinex', 'gdax']
         },
         xAxis: {
           type: 'time'
@@ -141,21 +140,16 @@ export default {
   },
 
   methods: {
+    // 获取收益数据
     async getTrades () {
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
-      })
-      let {data} = await api.getTrades()  // 价格趋势
-      loadingInstance.close()
-      let source = []
-      if (data.data instanceof Array) {
-        source = data.data
-      } else {
-        source = data.data.projects
-      }
-      console.log(source)
+      })                                   // 开启loading
+      let {data} = await api.getTrades()   // 价格趋势
+      let source = data.data               // 交易原始数据
+
       // 时间收益表- 数据-------------
       this.profitItem.dataset = {
         sourceHeader: false,
@@ -174,15 +168,10 @@ export default {
         }
       )
 
-      // 拷贝数组 遍历累加
-      let copyArr = source.map((el) => Object.assign({}, el))
-      let total = copyArr.map((el, i) => {
-        if (i != 0) {
-          el.profit += copyArr[i - 1].profit
-        }
-        return el
-      })
-
+      let res = await api.getProfit()     // 收益汇总
+      loadingInstance.close()             // 关闭loading
+      let total = res.data.data
+      console.log(total)
       // 收益累计表 -------------
       this.totalProfit.dataset = {
         sourceHeader: false,
@@ -199,53 +188,35 @@ export default {
           },
         }
       )
-
-      // 汇总btc数量变化
-      let bitfinex = []  // 初始
-      let gdax =[]
-
-      source.forEach((el) => {
-        if (el.buyExchange === 'gdax') {  // 买方为gdax
-          gdax.push([el.timestamp, el.buyAmount])
-          bitfinex.push([el.timestamp, el.sellAmount * -1])  // 卖方
-        }
-      })
-
-      // console.log(bitfinex)
-      bitfinex = bitfinex.map((el, i) => {
-        if (i != 0) {
-          el[1] += bitfinex[ i -1 ][1]
-        }
-        return el
-      })
-      gdax = gdax.map((el, i) => {
-        if (i != 0) {
-          el[1] += gdax[ i -1 ][1]
-        }
-        return el
-      })
-
-
-      this.accountItem.series.push(
-        {
-          type: 'line',
-          name: 'bitfinex-btc',
-          data: bitfinex,
-        },
-        {
-          type: 'line',
-          name: 'gdax-btc',
-          data: gdax,
-        }
-      )
-
-
-
-      // 线性encode
-
     },
 
-    handleClick(tab, event) {
+    // 获取钱包情况
+    async getAmount () {
+      let loadingInstance = Loading.service({
+        fullscreen: true,
+        body: true,
+        text: '数据加载中……'
+      })
+      let {data} = await api.getAmount()   // 货币数量
+      loadingInstance.close()              // 关闭loading
+      console.log(data)
+      let items = Object.keys(data.data)
+      console.log(items)
+      this.accountItem.legend.data = items
+      items.forEach(el => {
+        this.accountItem.series.push({
+          name : el,
+          type: 'line',
+          data: data.data[el]
+        })
+      })
+    },
+    // tab 切换点击
+    handleTabClick(tab, event) {
+      console.log(tab, event)
+      if (tab.index === '1') {
+        this.getAmount()
+      }
     }
   }
 }

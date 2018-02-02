@@ -11,19 +11,20 @@ Object.assign(axios.defaults, defaults)
 // console.log(axios.defaults.url)
 
 export default {
-
   /**
    * 获取货币列表信息
    */
-  getAllCoin (start = 0, limit = 100) {
-    return axios(`https://api.coinmarketcap.com/v1/ticker/?start=${start}&limit=${limit}`)
+  getAllCoin(start = 0, limit = 100) {
+    return axios(
+      `https://api.coinmarketcap.com/v1/ticker/?start=${start}&limit=${limit}`
+    )
   },
 
   /**
    * 获取特定货币价格趋势
    * @param {String} id  货币 ID
    */
-  getPriceById (id) {
+  getPriceById(id) {
     return axios(`/api/currencies/${id}/`)
   },
 
@@ -31,12 +32,26 @@ export default {
    * 获取特定货币reddit订阅人数
    * @param {String} id  货币 ID
    */
-  getCoinRedditSub (id) {
+  getCoinRedditSub(id) {
     return axios(`/redditSub/currencies/${id}/`)
   },
 
-  getTrades () {
+  /**
+   * 获取交易详情
+   */
+  getTrades() {
     return axios(`/api/trades`)
+  },
+  /**
+   * 获取收益汇总
+   */
+  getProfit() {
+    return axios(`/api/totalProfit`)
+  },
+  /**
+   * 获取货币交易数量
+   */
+  getAmount() {
+    return axios(`/api/amounts`)
   }
-
 }
