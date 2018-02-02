@@ -106,7 +106,7 @@ export default {
         },
         tooltip: {},
         legend: {
-          data:['总盈利']
+          data:['bitfinex-btc', 'gdax-btc']
         },
         xAxis: {
           type: 'time'
@@ -163,15 +163,6 @@ export default {
       }
       // 数据格式
       this.profitItem.series.push(
-        // {
-        //   type: 'bar',
-        //   name: '盈利',
-        //   encode: {
-        //     x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
-        //     y: 'profit', // 将 "profit" 列映射到 Y 轴
-        //     tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
-        //   },
-        // },
         {
           type: 'line',
           name: '盈利',
@@ -185,18 +176,12 @@ export default {
 
       // 拷贝数组 遍历累加
       let copyArr = source.map((el) => Object.assign({}, el))
-      // console.log('copyArr', copyArr)
       let total = copyArr.map((el, i) => {
         if (i != 0) {
-          // console.log(el.profit)
-          // console.log(copyArr[i - 1].profit)
           el.profit += copyArr[i - 1].profit
-          return el
-        } else {
-          return el
         }
+        return el
       })
-      // console.log(total)
 
       // 收益累计表 -------------
       this.totalProfit.dataset = {
@@ -204,15 +189,6 @@ export default {
         source: total
       }
       this.totalProfit.series.push(
-        // {
-        //   type: 'bar',
-        //   name: '总盈利',
-        //   encode: {
-        //     x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
-        //     y: 'profit', // 将 "profit" 列映射到 Y 轴
-        //     tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
-        //   },
-        // },
         {
           type: 'line',
           name: '总盈利',
@@ -231,30 +207,26 @@ export default {
       source.forEach((el) => {
         if (el.buyExchange === 'gdax') {  // 买方为gdax
           gdax.push([el.timestamp, el.buyAmount])
-          bitfinex.push([el.timestamp, el.sellExchange * -1])  // 卖方
+          bitfinex.push([el.timestamp, el.sellAmount * -1])  // 卖方
         }
       })
 
-      console.log(bitfinex)
-      // console.log('copyArr', copyArr)
-      // let total2 = copyArr2.map((el, i) => {
-      //   if (i != 0) {
-      //     // console.log(el.profit)
-      //     // console.log(copyArr[i - 1].profit)
-      //     el.profit += copyArr[i - 1].profit
-      //     return el
-      //   } else {
-      //     return el
-      //   }
-      // })
-      // console.log(total)
+      // console.log(bitfinex)
+      bitfinex = bitfinex.map((el, i) => {
+        if (i != 0) {
+          el[1] += bitfinex[ i -1 ][1]
+        }
+        return el
+      })
+      gdax = gdax.map((el, i) => {
+        if (i != 0) {
+          el[1] += gdax[ i -1 ][1]
+        }
+        return el
+      })
 
-      // btc交易计表 -------------
-      // this.totalProfit.dataset = {
-      //   sourceHeader: false,
-      //   source: total2
-      // }
-      this.totalProfit.series.push(
+
+      this.accountItem.series.push(
         {
           type: 'line',
           name: 'bitfinex-btc',
