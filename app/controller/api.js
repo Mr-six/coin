@@ -55,6 +55,14 @@ class HomeController extends Controller {
     })
     this.ctx.body = { success: true, data: data }
   }
+
+  // 获取余额
+  async balance () {
+    const ctx = this.ctx
+    const res = await ctx.service.balances.getBalance()
+    ctx.body = res
+  }
+
 }
 
 module.exports = HomeController

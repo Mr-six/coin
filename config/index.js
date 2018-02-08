@@ -8,6 +8,8 @@ const tarMoke =
   'https://www.easy-mock.com/mock/5a6ee3604c02fb3139acf15b/br'
 const tarTest = 'http://127.0.0.1:3001'
 
+const proxyUrl = process.env.NODE_ENV === 'local' ? tarTest : tarMoke
+
 module.exports = {
   dev: {
     // Paths
@@ -15,7 +17,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/proxy': {
-        target: tarTest,
+        target: proxyUrl,
         changeOrigin: true,
         pathRewrite: {
           '^/proxy': ''

@@ -7,6 +7,7 @@
   "scripts": {
     "dev:web": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev:web",
+    "local": "NODE_ENV=local npm run dev:web",
     "build": "node build/build.js",
     "dev": "egg-bin dev",
     "dev:server": "npm run build && npm run dev"

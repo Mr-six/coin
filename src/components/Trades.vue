@@ -212,7 +212,7 @@ export default {
     },
     // tab 切换点击
     handleTabClick(tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
       if (tab.index === '1') {
         this.getAmount()
       }

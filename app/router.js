@@ -4,4 +4,5 @@ module.exports = app => {
   router.get('/api/trades', controller.api.trades)              // 交易原始数据
   router.get('/api/totalProfit', controller.api.totalProfit)    // 收益汇总情况
   router.get('/api/amounts', controller.api.amount)             // 数字货币数量汇总
+  router.get('/api/balances', controller.api.balance)           // 获取账户信息
 }
