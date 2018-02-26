@@ -1,7 +1,20 @@
 <template>
 <div>
-  <el-button type="primary" icon="el-icon-refresh" @click="getAccount">点击刷新数据</el-button>
-  <chart v-if="activeName=='first'" :options="accountItem"></chart>
+  <el-tabs v-model="activeName" @tab-click="handleTabClick">
+    <el-tab-pane label="账户余额" name="first">
+
+      <el-button type="primary" icon="el-icon-refresh" @click="getAccount">点击刷新数据</el-button>
+
+      <chart v-if="activeName=='first'" :options="accountItem"></chart>
+
+    </el-tab-pane>
+    <el-tab-pane label="账户信息" name="second">
+      空
+    </el-tab-pane>
+    <el-tab-pane label="其他" name="fourth">
+      空
+    </el-tab-pane>
+  </el-tabs>
 </div>
 </template>
 
@@ -18,9 +31,10 @@ import { Loading } from 'element-ui'
 export default {
   data: function () {
     return {
+      activeName: 'first',
       accountItem: {
         title: {
-          text: ''
+          text: '账户余额'
         },
         tooltip: {},
         legend: {
@@ -66,12 +80,13 @@ export default {
         body: true,
         text: '数据加载中……'
       })
-      let {data} = await api.getCoinCost()   // 货币花费
+      let {data} = await api.getAccount()   // 账户余额
       loadingInstance.close()               // 关闭loading
+      console.log(data)
       let items = Object.keys(data.data)
-      this.coinCostItem.legend.data = items
+      this.accountItem.legend.data = items
       items.forEach(el => {
-        this.coinCostItem.series.push({
+        this.accountItem.series.push({
           name : el,
           type: 'line',
           data: data.data[el]
@@ -79,6 +94,9 @@ export default {
       })
     },
 
+    handleTabClick(tab, event) {
+      // console.log(tab, event)
+    }
   }
 }
 </script>

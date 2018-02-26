@@ -68,7 +68,14 @@ export default {
   /**
    * 获取货币交易数量
    */
-  getAmount() {
-    return axios(`/api/amounts`)
+  getAccount(symbol = 'btc') {
+    return axios(`/api/balances?symbol=${symbol}`)
+  },
+
+  /**
+   * 收益比例
+   */
+  getProfitsPercent(symbol = 'btc') {
+    return axios(`/api/profitsPercent`)
   }
 }

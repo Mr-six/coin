@@ -8,10 +8,16 @@ class HomeController extends Controller {
     const res = await ctx.service.trades.getTrades()
     this.ctx.body = { success: true, data: res }
   }
-  // 交易原始数据
+  // 交易收益数据
   async tradesProfit() {
     const ctx = this.ctx
     const res = await ctx.service.trades.getCurrProfit()
+    this.ctx.body = { success: true, data: res }
+  }
+  // 交易收益百分比
+  async profitsPercent() {
+    const ctx = this.ctx
+    const res = await ctx.service.trades.getProfitsPercent()
     this.ctx.body = { success: true, data: res }
   }
   // 收益汇总

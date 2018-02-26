@@ -49,6 +49,18 @@ class TradesService extends Service {
     return total
   }
 
+  // 收益百分比
+  async getProfitsPercent() {
+    const data = await this.getCurrProfit()
+    let profitPercent = data.map((el, i) => {
+      // 当前收益
+      const percent = el.profit / (el.buyPrice * el.buyAmount + el.sellFee + el.buyFee) * 100
+      el.profitPercent = percent
+      return el
+    })
+    return profitPercent
+  }
+
   /**
    * 单个交易所交易情况
    */
