@@ -38,7 +38,8 @@ class HomeController extends Controller {
   async balance() {
     const ctx = this.ctx
     const res = await ctx.service.balances.getBalance()
-    ctx.body = res
+
+    ctx.body = { success: true, data: res }
   }
 }
 
