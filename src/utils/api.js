@@ -40,14 +40,31 @@ export default {
    * 获取交易详情
    */
   getTrades() {
-    return axios(`/api/trades`)
+    return axios.post(`/api/tradesProfit`)
   },
   /**
    * 获取收益汇总
    */
   getProfit() {
-    return axios(`/api/totalProfit`)
+    return axios.post(`/api/totalProfit`)
   },
+  getProfit() {
+    return axios.post(`/api/totalProfit`)
+  },
+  /**
+   * 获取交易所数字货币花费
+   */
+  getCoinCost() {
+    return axios.post(`/api/coinCost`)
+  },
+
+  /**
+   * 获取交易所现金花费
+   */
+  getMoneyCost() {
+    return axios.post(`/api/moneyCost`)
+  },
+
   /**
    * 获取货币交易数量
    */

@@ -21,7 +21,12 @@ module.exports = {
   },
   // Mock测试借口地址
   mock: {
-    MocoUrl:
-      'https://www.easy-mock.com/mock/5a6ee3604c02fb3139acf15b/br'
+    MocoUrl: 'https://www.easy-mock.com/mock/5a6ee3604c02fb3139acf15b/br'
+  },
+  // 安全配置
+  security: {
+    csrf: {
+      enable: false
+    }
   }
 }

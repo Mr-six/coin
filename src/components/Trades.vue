@@ -12,8 +12,9 @@
 
     </el-tab-pane>
     <el-tab-pane label="交易详情" name="second">
-      <el-button type="primary" icon="el-icon-refresh" @click="getAmount">点击刷新数据</el-button>
-      <chart v-if="activeName=='second'" :options="accountItem"></chart>
+      <el-button type="primary" icon="el-icon-refresh" @click="getCost">点击刷新数据</el-button>
+      <chart v-if="activeName=='second'" :options="coinCostItem"></chart>
+      <chart v-if="activeName=='second'" :options="moneyCostItem"></chart>
     </el-tab-pane>
     <el-tab-pane label="账户详情" name="fourth">
       空
@@ -100,13 +101,45 @@ export default {
         series: [],
         // animationDuration: 2000
       },
-      accountItem: {
+      coinCostItem: {
         title: {
-          text: '货币钱包汇总'
+          text: '数字货币数量详情(正为买入,负为卖出)'
         },
         tooltip: {},
         legend: {
-          data:['bitfinex', 'gdax']
+          data:[]
+        },
+        xAxis: {
+          type: 'time'
+        },
+        yAxis: {},
+        dataZoom: [
+          {
+          type: 'slider',
+          xAxisIndex: [0],
+          show: true,
+          start: 0,
+          end: 100,
+        },
+        {
+          type: 'slider',
+          yAxisIndex: [0],
+          show: true,
+          start: 0,
+          end: 100,
+        }
+        ],
+        dataset: {},
+        series: [],
+        // animationDuration: 2000
+      },
+      moneyCostItem: {
+        title: {
+          text: '现金数量(正为收入,负为花费)'
+        },
+        tooltip: {},
+        legend: {
+          data:[]
         },
         xAxis: {
           type: 'time'
@@ -191,22 +224,33 @@ export default {
       )
     },
 
-    // 获取钱包情况
-    async getAmount () {
+    // 交易所收支详情
+    async getCost () {
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })
-      let {data} = await api.getAmount()   // 货币数量
-      loadingInstance.close()              // 关闭loading
+      let {data} = await api.getCoinCost()   // 货币花费
+      let dataM = await api.getMoneyCost()   // 货币花费
+      loadingInstance.close()               // 关闭loading
       let items = Object.keys(data.data)
-      this.accountItem.legend.data = items
+      this.coinCostItem.legend.data = items
       items.forEach(el => {
-        this.accountItem.series.push({
+        this.coinCostItem.series.push({
           name : el,
           type: 'line',
           data: data.data[el]
+        })
+      })
+
+      let itemsM = Object.keys(dataM.data.data)
+      this.moneyCostItem.legend.data = itemsM
+      itemsM.forEach(el => {
+        this.moneyCostItem.series.push({
+          name : el,
+          type: 'line',
+          data: dataM.data.data[el]
         })
       })
     },
@@ -214,7 +258,7 @@ export default {
     handleTabClick(tab, event) {
       // console.log(tab, event)
       if (tab.index === '1') {
-        this.getAmount()
+        this.getCost()
       }
     }
   }
