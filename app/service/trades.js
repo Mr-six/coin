@@ -31,21 +31,20 @@ class TradesService extends Service {
   // 总收益汇总
   async getTotalProfit() {
     const data = await this.getTrades()
-    let total = data.map((el, i) => {
-      const currProfit =
-        el.sellPrice * el.sellAmount -
-        el.buyPrice * el.buyAmount -
-        el.sellFee -
-        el.buyFee // 当前收益
-      if (i === 0) {
-        el.profit = currProfit
-      } else {
-        const prevProfit = data[i - 1].profit // 上一个交易收益汇总
-        el.profit = prevProfit + currProfit
-      }
-      return el
-    })
-    return total
+    if (!data[0].profit) {  // 是否已经计算过收益
+      let total = data.map((el, i) => {
+        const currProfit = el.sellPrice * el.sellAmount - el.buyPrice * el.buyAmount - el.sellFee - el.buyFee // 当前收益
+        if (i === 0) {
+          el.profit = currProfit
+        } else {
+          const prevProfit = data[i - 1].profit // 上一个交易收益汇总
+          el.profit = prevProfit + currProfit
+        }
+        return el
+      })
+      return total
+    }
+    return data
   }
 
   // 收益百分比

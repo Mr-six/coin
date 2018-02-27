@@ -2,7 +2,8 @@
   <div id="app">
     <el-container>
       <el-header>
-        <p class="header">数字货币项目</p>
+        <!-- <p class="header">数字货币项目</p> -->
+        <com-header />
       </el-header>
       <el-main>
         <router-view/>
@@ -11,14 +12,24 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app'
-}
-</script>
-
 <style>
+  body {
+    margin: 0;
+  }
+  .el-header {
+    padding: 0;
+  }
   .header {
     text-align: center;
   }
 </style>
+
+<script>
+  import  comHeader from './components/ComHeader'
+  export default {
+    name: 'app',
+    components: {
+      comHeader
+    }
+  }
+</script>

@@ -1,23 +1,9 @@
 <template>
-<div>
-
-  <el-tabs v-model="activeName" @tab-click="handleTabClick">
-    <el-tab-pane label="支出收益百分比详情" name="first">
-
-      <el-button type="primary" icon="el-icon-refresh" @click="getProfitsPercent">点击刷新数据</el-button>
-
+  <div>
+    <el-button type="primary" icon="el-icon-refresh" @click="getProfitsPercent">点击刷新数据</el-button>
       <chart v-if="activeName=='first'" :options="profitPercentItem"></chart>
       <chart v-if="activeName=='first'" :options="pieItem"></chart>
-
-    </el-tab-pane>
-    <el-tab-pane label="交易详情" name="second">
-      空
-    </el-tab-pane>
-    <el-tab-pane label="账户详情" name="fourth">
-      空
-    </el-tab-pane>
-  </el-tabs>
-</div>
+  </div>
 </template>
 
 <style>
@@ -122,10 +108,6 @@ export default {
       this.pieItem.series[0].data = pie
 
     },
-    // tab 切换点击
-    handleTabClick(tab, event) {
-
-    }
   }
 }
 </script>

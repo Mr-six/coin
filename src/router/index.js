@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import TableCoin from "@/components/TableCoin"
-import CoinCharts from '@/components/CoinCharts'
-import Trades from '@/components/Trades'
-import Account from '@/components/Account'
-import ProfitsPercent from '@/components/ProfitsPercent'
+
+import DashBoard from '../view/DashBoard'
+import Profits from '../view/Profits'
+import ExchangeTrades from '../view/ExchangeTrades'
+import ProfitsPercent from '../view/ProfitsPercent'
+import Account from '../view/Account'
+import TableCoin from '../view/TableCoin'
+
 
 Vue.use(Router)
 
@@ -12,8 +15,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Trades',
-      component: Trades
+      name: 'DashBoard',
+      component: DashBoard
+    },
+    {
+      path: '/Profits',
+      name: 'Profits',
+      component: Profits
+    },
+    {
+      path: '/ExchangeTrades',
+      name: 'ExchangeTrades',
+      component: ExchangeTrades
     },
     {
       path: '/account',
@@ -30,10 +43,5 @@ export default new Router({
       name: 'TableCoin',
       component: TableCoin
     },
-    {
-      path: '/chart/:id',
-      name: 'CoinCharts',
-      component: CoinCharts
-    }
   ]
 })

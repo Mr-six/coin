@@ -5,16 +5,20 @@ import App from './App'
 import router from './router'
 
 // element ---------------------
-import { Table, TableColumn, Header, Main, Container, Tabs, TabPane, Button} from 'element-ui'
+import { Table, TableColumn, Header, Menu, MenuItem, Submenu, MenuItemGroup, Main, Container, Tabs, TabPane, Button, Card} from 'element-ui'
 
 Vue.use(Header)
 Vue.use(Main)
 Vue.use(Table)
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(Submenu)
 Vue.use(TableColumn)
 Vue.use(Container)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Button)
+Vue.use(Card)
 // element ---------------------
 
 // echarts ---------------------
@@ -39,11 +43,11 @@ import 'echarts/lib/chart/pie'
 // import 'echarts/lib/component/visualMap'
 
 
-
-
 // 注册组件后即可使用
 Vue.component('chart', ECharts)
 // echarts ---------------------
+
+
 
 
 Vue.config.productionTip = false
