@@ -5,7 +5,6 @@ class TradesService extends Service {
   async getTrades() {
     const { app, ctx } = this
     const body = ctx.request.body
-    console.log(body)
     const data = await app.mongo.find('trades', {
       ...body,
       sort: { timestamp: 1 }
@@ -52,13 +51,47 @@ class TradesService extends Service {
   // 收益百分比
   async getProfitsPercent() {
     const data = await this.getCurrProfit()
+    // 收益率分布
+    let yields = [
+      {
+        value: 0,
+        name: '<1%'
+      },
+      {
+        value: 0,
+        name: '1%~2%'
+      },
+      {
+        value: 0,
+        name: '2%~3%'
+      },
+      {
+        value: 0,
+        name: '>3%'
+      }
+    ]
     let profitPercent = data.map((el, i) => {
       // 当前收益
       const percent = el.profit / (el.buyPrice * el.buyAmount + el.sellFee + el.buyFee) * 100
       el.profitPercent = percent
+      // 统计收益率分布
+      switch (true) {
+        case (percent > 1 && percent < 2):
+          yields[1].value++
+          break
+        case (percent <= 1):
+          yields[0].value++
+          break
+        case (percent >= 2 && percent <= 3):
+          yields[2].value++
+          break
+        case (percent > 3):
+          yields[3].value++
+          break
+      }
       return el
     })
-    return profitPercent
+    return { profitPercent, yields }
   }
 
   /**

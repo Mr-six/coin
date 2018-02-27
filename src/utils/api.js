@@ -48,9 +48,6 @@ export default {
   getProfit() {
     return axios.post(`/api/totalProfit`)
   },
-  getProfit() {
-    return axios.post(`/api/totalProfit`)
-  },
   /**
    * 获取交易所数字货币花费
    */
@@ -76,6 +73,6 @@ export default {
    * 收益比例
    */
   getProfitsPercent(symbol = 'btc') {
-    return axios(`/api/profitsPercent`)
+    return axios.post(`/api/profitsPercent`)
   }
 }

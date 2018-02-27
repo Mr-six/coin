@@ -7,6 +7,7 @@
       <el-button type="primary" icon="el-icon-refresh" @click="getProfitsPercent">点击刷新数据</el-button>
 
       <chart v-if="activeName=='first'" :options="profitPercentItem"></chart>
+      <chart v-if="activeName=='first'" :options="pieItem"></chart>
 
     </el-tab-pane>
     <el-tab-pane label="交易详情" name="second">
@@ -35,11 +36,11 @@ export default {
       activeName: 'first',
       profitPercentItem: {
         title: {
-          text: '盈利情况'
+          text: '收益率 - 折线图'
         },
         tooltip: {},
         legend: {
-          data:['盈利']
+          data:['收益率']
         },
         xAxis: {
           type: 'time'
@@ -65,6 +66,20 @@ export default {
         series: [],
         // animationDuration: 2000
       },
+      pieItem: {
+        title: {
+          text: '收益率 - 饼图'
+        },
+        legend: {},
+        tooltip: {},
+
+        series: [{
+          type: 'pie',
+          radius: '55%',
+          data: []
+        }],
+        // animationDuration: 2000
+      },
     }
   },
 
@@ -82,7 +97,9 @@ export default {
         text: '数据加载中……'
       })                                   // 开启loading
       let {data} = await api.getProfitsPercent()   // 价格趋势
-      let source = data.data               // 交易原始数据
+      loadingInstance.close()             // 关闭loading
+      let source = data.data.profitPercent  // 原始数据 折线图
+      let pie = data.data.yields            // 收益率
 
       // 时间收益表- 数据-------------
       this.profitPercentItem.dataset = {
@@ -96,32 +113,14 @@ export default {
           name: '盈利',
           encode: {
             x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
-            y: 'profit', // 将 "profit" 列映射到 Y 轴
+            y: 'profitPercent', // 将 "profit" 列映射到 Y 轴
             tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
           },
         }
       )
+      // 收益率饼图
+      this.pieItem.series[0].data = pie
 
-      let res = await api.getProfit()     // 收益汇总
-      loadingInstance.close()             // 关闭loading
-      let total = res.data.data
-      console.log(total)
-      // 收益累计表 -------------
-      this.totalProfit.dataset = {
-        sourceHeader: false,
-        source: total
-      }
-      this.totalProfit.series.push(
-        {
-          type: 'line',
-          name: '总盈利',
-          encode: {
-            x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
-            y: 'profit', // 将 "profit" 列映射到 Y 轴
-            tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
-          },
-        }
-      )
     },
     // tab 切换点击
     handleTabClick(tab, event) {
