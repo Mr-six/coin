@@ -45,7 +45,10 @@
   padding: 60px 0;
 }
 .el-card {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
+}
+.box-card {
+  width: auto;
 }
 </style>
 
