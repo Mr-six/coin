@@ -6,6 +6,7 @@
     <el-menu-item index="2-1"><router-link :to="{ name: 'Profits'}">收益统计</router-link></el-menu-item>
     <el-menu-item index="2-2"><router-link :to="{ name: 'ExchangeTrades'}">交易所交易详情</router-link></el-menu-item>
     <el-menu-item index="2-3"><router-link :to="{ name: 'ProfitsPercent'}">盈利率统计</router-link></el-menu-item>
+    <el-menu-item index="2-3"><router-link :to="{ name: 'TradeStatus'}">交易状态</router-link></el-menu-item>
 
   </el-submenu>
   <el-menu-item index="3" disabled><router-link :to="{ name: 'Account'}">用户中心</router-link></el-menu-item>

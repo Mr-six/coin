@@ -43,6 +43,12 @@ export default {
     return axios.post(`/api/tradesProfit`)
   },
   /**
+   * 获取交易状态
+   */
+  getTradeStatus() {
+    return axios.post(`/api/tradesStatus`)
+  },
+  /**
    * 获取收益汇总
    */
   getProfit() {
@@ -74,5 +80,12 @@ export default {
    */
   getProfitsPercent(symbol = 'btc') {
     return axios.post(`/api/profitsPercent`)
+  },
+
+  /**
+   * 获取交易所账户预览
+   */
+  getAccountPreview() {
+    return axios(`/api/balancePreview`)
   }
 }

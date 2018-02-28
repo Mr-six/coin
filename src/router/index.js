@@ -7,6 +7,8 @@ import ExchangeTrades from '../view/ExchangeTrades'
 import ProfitsPercent from '../view/ProfitsPercent'
 import Account from '../view/Account'
 import TableCoin from '../view/TableCoin'
+import TradeStatus from '../view/TradeStatus'
+
 
 
 Vue.use(Router)
@@ -22,6 +24,11 @@ export default new Router({
       path: '/Profits',
       name: 'Profits',
       component: Profits
+    },
+    {
+      path: '/TradeStatus',
+      name: 'TradeStatus',
+      component: TradeStatus
     },
     {
       path: '/ExchangeTrades',
@@ -42,6 +49,6 @@ export default new Router({
       path: '/tableCoin',
       name: 'TableCoin',
       component: TableCoin
-    },
+    }
   ]
 })

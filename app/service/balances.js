@@ -26,6 +26,16 @@ class BalancesService extends Service {
 
     return res
   }
+  async getBalancePreview () {
+    const { app, ctx } = this
+
+    // 暂时使用mock数据代替
+    const { MocoUrl } = this.config.mock
+    const { data } = await this.ctx.curl(`${MocoUrl}/api/balancepreview`, {
+      dataType: 'json'
+    })
+    return data.data
+  }
 }
 
 module.exports = BalancesService

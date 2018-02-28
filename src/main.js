@@ -5,7 +5,25 @@ import App from './App'
 import router from './router'
 
 // element ---------------------
-import { Table, TableColumn, Header, Menu, MenuItem, Submenu, MenuItemGroup, Main, Container, Tabs, TabPane, Button, Card} from 'element-ui'
+import {
+  Table,
+  TableColumn,
+  Header,
+  Menu,
+  MenuItem,
+  Submenu,
+  MenuItemGroup,
+  Main,
+  Container,
+  Tabs,
+  TabPane,
+  Button,
+  Card,
+  Row,
+  Select,
+  Option,
+  Col
+} from 'element-ui'
 
 Vue.use(Header)
 Vue.use(Main)
@@ -19,6 +37,10 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Button)
 Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Select)
+Vue.use(Option)
 // element ---------------------
 
 // echarts ---------------------

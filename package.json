@@ -10,13 +10,16 @@
     "local": "NODE_ENV=local npm run dev:web",
     "build": "node build/build.js",
     "dev": "egg-bin dev",
-    "dev:server": "npm run build && npm run dev"
+    "dev:server": "npm run build && npm run dev",
+    "server": "egg-scripts start --daemon",
+    "stop": "egg-scripts stop"
   },
   "dependencies": {
     "axios": "^0.17.1",
     "egg": "^2.3.0",
     "egg-bin": "^4.3.7",
     "egg-mongo-native": "^3.0.0",
+    "egg-scripts": "^2.5.1",
     "element-ui": "^2.0.11",
     "vue": "^2.5.2",
     "vue-echarts": "^3.0.1",

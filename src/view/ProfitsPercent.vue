@@ -100,7 +100,7 @@ export default {
           encode: {
             x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
             y: 'profitPercent', // 将 "profit" 列映射到 Y 轴
-            tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
+            tooltip: ['timestamp', 'profitRate', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
           },
         }
       )

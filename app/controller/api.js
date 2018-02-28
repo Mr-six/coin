@@ -8,6 +8,12 @@ class HomeController extends Controller {
     const res = await ctx.service.trades.getTrades()
     this.ctx.body = { success: true, data: res }
   }
+  // 交易状态
+  async tradesStatus() {
+    const ctx = this.ctx
+    const res = await ctx.service.trades.getTradesStatus()
+    this.ctx.body = { success: true, data: res }
+  }
   // 交易收益数据
   async tradesProfit() {
     const ctx = this.ctx
@@ -44,7 +50,12 @@ class HomeController extends Controller {
   async balance() {
     const ctx = this.ctx
     const res = await ctx.service.balances.getBalance()
-
+    ctx.body = { success: true, data: res }
+  }
+  // 获取余额预览
+  async balancePreview() {
+    const ctx = this.ctx
+    const res = await ctx.service.balances.getBalancePreview()
     ctx.body = { success: true, data: res }
   }
 }

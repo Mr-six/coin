@@ -45,6 +45,7 @@
 
 <script>
   import {api} from '../utils'
+  import { Loading } from 'element-ui'
   export default {
     data() {
       return {
@@ -53,9 +54,15 @@
     },
 
     async beforeMount () {
+      let loadingInstance = Loading.service({
+        fullscreen: true,
+        body: true,
+        text: '数据加载中……'
+      })
       let {data} = await api.getAllCoin()  // 首页列表
       // let {data} = await api.getPriceById('bitcoin')  // 价格趋势
       // let {data} = await api.getCoinRedditSub('bitcoin')  // 订阅趋势
+      loadingInstance.close()               // 关闭loading
       this.tableData = data
       console.log(data)
     },

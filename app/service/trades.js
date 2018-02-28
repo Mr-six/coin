@@ -5,46 +5,56 @@ class TradesService extends Service {
   async getTrades() {
     const { app, ctx } = this
     const body = ctx.request.body
-    const data = await app.mongo.find('trades', {
+    const data = await app.mongo.find('trade_pair_document', {
       ...body,
       sort: { timestamp: 1 }
     })
     return data
   }
 
+  // 交易成功状态
+  async getTradesStatus () {
+    const { app, ctx } = this
+    // const body = ctx.request.body
+    const tradeSucce = await app.mongo.count('trade_pair_document', {query: {resolved: true}})
+    const tradeFalse = await app.mongo.count('trade_pair_document', {query: {resolved: false}})
+    return [{ value: tradeSucce, name: 'success trade' }, { value: tradeFalse, name: 'failure trade' }]
+  }
+
   // 每笔收益情况
   async getCurrProfit() {
     const data = await this.getTrades()
-    let profit = data.map((el, i) => {
-      // 当前收益
-      const currProfit =
-        el.sellPrice * el.sellAmount -
-        el.buyPrice * el.buyAmount -
-        el.sellFee -
-        el.buyFee
-      el.profit = currProfit
-      return el
-    })
-    return profit
+    if (!data[0].profit) {  // 是否已经计算过收益
+      let profit = data.map((el, i) => {
+        // 当前收益
+        const currProfit =
+          el.sellPrice * el.sellAmount -
+          el.buyPrice * el.buyAmount -
+          el.sellFee -
+          el.buyFee
+        el.profit = currProfit
+        return el
+      })
+      return profit
+    }
+    return data
+
   }
 
   // 总收益汇总
   async getTotalProfit() {
     const data = await this.getTrades()
-    if (!data[0].profit) {  // 是否已经计算过收益
-      let total = data.map((el, i) => {
-        const currProfit = el.sellPrice * el.sellAmount - el.buyPrice * el.buyAmount - el.sellFee - el.buyFee // 当前收益
-        if (i === 0) {
-          el.profit = currProfit
-        } else {
-          const prevProfit = data[i - 1].profit // 上一个交易收益汇总
-          el.profit = prevProfit + currProfit
-        }
-        return el
-      })
-      return total
-    }
-    return data
+    let total = data.map((el, i) => {
+      const currProfit = el.sellPrice * el.sellAmount - el.buyPrice * el.buyAmount - el.sellFee - el.buyFee // 当前收益
+      if (i === 0) {
+        el.profit = currProfit
+      } else {
+        const prevProfit = data[i - 1].profit // 上一个交易收益汇总
+        el.profit = prevProfit + currProfit
+      }
+      return el
+    })
+    return total
   }
 
   // 收益百分比
@@ -71,7 +81,7 @@ class TradesService extends Service {
     ]
     let profitPercent = data.map((el, i) => {
       // 当前收益
-      const percent = el.profit / (el.buyPrice * el.buyAmount + el.sellFee + el.buyFee) * 100
+      const percent = el.profitRate * 100
       el.profitPercent = percent
       // 统计收益率分布
       switch (true) {

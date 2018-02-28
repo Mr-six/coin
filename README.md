@@ -23,6 +23,10 @@ npm install --production
 
 # 启动项目 确保本地 mongodb 服务开启 连接配置： config/config.default.js
 npm run dev
+
+# 服务端启动
+npm run server # 启动服务
+npm run stop  # 停止服务
 ```
 
 ## 使用框架
