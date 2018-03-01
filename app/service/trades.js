@@ -24,19 +24,17 @@ class TradesService extends Service {
   // 每笔收益情况
   async getCurrProfit() {
     const data = await this.getTrades()
-    if (!data[0].profit) {  // 是否已经计算过收益
-      let profit = data.map((el, i) => {
-        // 当前收益
-        const currProfit =
-          el.sellPrice * el.sellAmount -
-          el.buyPrice * el.buyAmount -
-          el.sellFee -
-          el.buyFee
-        el.profit = currProfit
-        return el
-      })
-      return profit
-    }
+    if (!data.length) return []
+    if (!data[0].profit) {
+        // 是否已经计算过收益
+        let profit = data.map((el, i) => {
+          // 当前收益
+          const currProfit = el.sellPrice * el.sellAmount - el.buyPrice * el.buyAmount - el.sellFee - el.buyFee
+          el.profit = currProfit
+          return el
+        })
+        return profit
+      }
     return data
 
   }
@@ -60,6 +58,7 @@ class TradesService extends Service {
   // 收益百分比
   async getProfitsPercent() {
     const data = await this.getCurrProfit()
+    if (!data.length) return []
     // 收益率分布
     let yields = [
       {
@@ -110,6 +109,7 @@ class TradesService extends Service {
   // 数字货币消耗
   async getCoinCost() {
     const res = await this.getTrades()
+    if (!res.length) return []
     let data = {}
     res.forEach(el => {
       // 数据买卖分离
@@ -130,6 +130,7 @@ class TradesService extends Service {
   // 金钱消耗
   async getMoneyCost() {
     const res = await this.getTrades()
+    if (!res.length) return []
     let data = {}
     res.forEach(el => {
       // 数据买卖分离

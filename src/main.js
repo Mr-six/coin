@@ -5,14 +5,17 @@ import App from './App'
 import router from './router'
 
 // element ---------------------
+// import ElementUI from 'element-ui'
+// Vue.use(ElementUI)
+
 import {
   Table,
   TableColumn,
   Header,
   Menu,
   MenuItem,
-  Submenu,
   MenuItemGroup,
+  Submenu,
   Main,
   Container,
   Tabs,
@@ -22,7 +25,10 @@ import {
   Row,
   Select,
   Option,
-  Col
+  Col,
+  Aside,
+  Progress,
+  Tag
 } from 'element-ui'
 
 Vue.use(Header)
@@ -30,6 +36,7 @@ Vue.use(Main)
 Vue.use(Table)
 Vue.use(Menu)
 Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
 Vue.use(Submenu)
 Vue.use(TableColumn)
 Vue.use(Container)
@@ -41,6 +48,9 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Tag)
+Vue.use(Aside)
+Vue.use(Progress)
 // element ---------------------
 
 // echarts ---------------------

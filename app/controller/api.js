@@ -1,4 +1,3 @@
-const path = require('path')
 const Controller = require('egg').Controller
 
 class HomeController extends Controller {

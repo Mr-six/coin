@@ -8,6 +8,9 @@ import ProfitsPercent from '../view/ProfitsPercent'
 import Account from '../view/Account'
 import TableCoin from '../view/TableCoin'
 import TradeStatus from '../view/TradeStatus'
+import Status from '../view/Status'
+import ErrorLog from '../components/ErrorLog'
+import PlatformInfo from '../components/PlatformInfo'
 
 
 
@@ -49,6 +52,23 @@ export default new Router({
       path: '/tableCoin',
       name: 'TableCoin',
       component: TableCoin
+    },
+    {
+      path: '/Status',
+      name: 'Status',
+      component: Status,
+      children: [
+        {
+          path: 'PlatformInfo',
+          name: 'PlatformInfo',
+          component: PlatformInfo
+        },
+        {
+          path: 'ErrorLog',
+          name: 'ErrorLog',
+          component: ErrorLog
+        }
+      ]
     }
   ]
 })

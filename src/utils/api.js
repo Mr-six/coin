@@ -87,5 +87,18 @@ export default {
    */
   getAccountPreview() {
     return axios(`/api/balancePreview`)
+  },
+
+  /**
+   * 获取错误日志
+   */
+  getErrLog() {
+    return axios.post(`/api/errLog`)
+  },
+  /**
+   * 获取系统信息
+   */
+  getSysStatus () {
+    return axios(`/api/status`)
   }
 }
