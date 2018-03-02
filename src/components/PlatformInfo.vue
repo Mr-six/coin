@@ -27,14 +27,63 @@
         <div slot="header">
           <span>内存占用</span>
         </div>
-        <el-progress :percentage="10"></el-progress>
-        <p>内存总量: {{infoData.memory.totalmem}} G</p>
-        <p>空闲内存: {{infoData.memory.freemem}} G</p>
+        <el-progress :text-inside="true" :stroke-width="18" :percentage="infoData.memory.memoryRate" status="exception"></el-progress>
+        <p>可用内存: {{infoData.memory.memoryFree}} G</p>
+        <p>内存总量: {{infoData.memory.totalMem}} G</p>
+      </el-card>
+    </el-col>
+
+    <el-col :span="24" class="cpu-card">
+      <el-card>
+        <div slot="header">
+          <span>cpu使用情况</span>
+        </div>
+        <el-col :span="6" v-if="cpusData.length" v-for="(e, i) in cpusData" :key="i" class="text-center">
+          <el-progress type="circle" :percentage="e.useRate"></el-progress>
+          <h5>{{e.model}}</h5>
+        </el-col>
+      </el-card>
+    </el-col>
+    <el-col :span="24" class="cpu-card">
+      <el-card>
+        <div slot="header">
+          <span>文件系统</span>
+        </div>
+        <div>
+          <div v-for="(row, i) in infoData.dirc" :key="i" class="line clearfix">
+            <el-col :span="4" v-for="(e, i) in row" :key="i">
+              <span>{{ e }}</span>
+            </el-col>
+          </div>
+        </div>
       </el-card>
     </el-col>
 
   </el-row>
 </template>
+
+<style>
+.cpu-card {
+  padding: 30px 0 0 0;
+}
+.text-center {
+  text-align: center;
+}
+.line {
+  padding: 10px;
+  text-align: left;
+}
+.clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+
+  .clearfix:after {
+      clear: both
+  }
+</style>
+
 
 <script>
   import {api} from '../utils'
@@ -42,15 +91,16 @@
   export default {
     data() {
       return {
-        infoData: ''
+        infoData: '',
+        cpusData: []
       }
     },
 
     async beforeMount () {
-      this.getErrorLog()
+      this.getSysInfo()
     },
     methods: {
-      async getErrorLog () {
+      async getSysInfo () {
         let loadingInstance = Loading.service({
           fullscreen: true,
           body: true,
@@ -59,8 +109,24 @@
         let {data} = await api.getSysStatus()   // 获取数据
         loadingInstance.close()              // 关闭loading
         this.infoData = data.data
+        const cpus = data.data.cpus ? data.data.cpus : []
+        if (cpus.length) {
+          cpus.forEach((el, i) => {
+            let all = Object.values(el.times).reduce((a, b) => a + b)
+            let idle = el.times.idle
+            let idleRate = parseFloat((idle / all * 100).toFixed(2))
+            let useRate = parseFloat((100 - idleRate).toFixed(2))
+            let model = el.model
+            this.cpusData.push({
+              model,
+              useRate
+            })
+          })
+        }
         console.log(this.infoData)
       },
+    },
+    computed: {
     }
   }
 </script>

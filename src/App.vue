@@ -16,6 +16,10 @@
   body {
     margin: 0;
   }
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
   .el-header {
     padding: 0;
   }

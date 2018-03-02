@@ -56,6 +56,7 @@ export default new Router({
     {
       path: '/Status',
       name: 'Status',
+      redirect: '/Status/PlatformInfo',
       component: Status,
       children: [
         {
