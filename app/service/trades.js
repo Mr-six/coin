@@ -18,7 +18,7 @@ class TradesService extends Service {
     // const body = ctx.request.body
     const tradeSucce = await app.mongo.count('trade_pair_document', {query: {resolved: true}})
     const tradeFalse = await app.mongo.count('trade_pair_document', {query: {resolved: false}})
-    return [{ value: tradeSucce, name: 'success trade' }, { value: tradeFalse, name: 'failure trade' }]
+    return [{ value: tradeSucce, name: 'resolved trade' }, { value: tradeFalse, name: 'pending trade' }]
   }
 
   // 每笔收益情况

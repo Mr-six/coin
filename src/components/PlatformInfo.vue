@@ -66,22 +66,11 @@
 .cpu-card {
   padding: 30px 0 0 0;
 }
-.text-center {
-  text-align: center;
-}
+
 .line {
   padding: 10px;
   text-align: left;
 }
-.clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-
-  .clearfix:after {
-      clear: both
-  }
 </style>
 
 

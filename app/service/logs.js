@@ -4,11 +4,13 @@ class Logs extends Service {
   async getErrorLogs() {
     const { app, ctx } = this
     const body = ctx.request.body
-    const data = await app.mongo.find('error_log', {
+    const errorLog = await app.mongo.find('error_log', {
       ...body,
-      sort: { timestamp: 1 }
+      sort: { timestamp: -1 }
     })
-    return data
+    const tatol = await app.mongo.count('error_log')
+
+    return { errorLog, tatol }
   }
 }
 

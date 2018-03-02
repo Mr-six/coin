@@ -28,6 +28,8 @@ import {
   Col,
   Aside,
   Progress,
+  Pagination,
+  DatePicker,
   Tag
 } from 'element-ui'
 
@@ -51,6 +53,8 @@ Vue.use(Option)
 Vue.use(Tag)
 Vue.use(Aside)
 Vue.use(Progress)
+Vue.use(Pagination)
+Vue.use(DatePicker)
 // element ---------------------
 
 // echarts ---------------------

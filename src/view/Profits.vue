@@ -1,6 +1,17 @@
 <template>
 <div>
   <el-button type="primary" icon="el-icon-refresh" @click="getTrades">点击刷新数据</el-button>
+  <div class="block">
+    <p>选择查询日期范围：{{ period }}</p>
+    <el-date-picker
+      v-model="period"
+      type="daterange"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      @change="handlerDateChange"
+      :default-time="['00:00:00', '23:59:59']">
+    </el-date-picker>
+  </div>
   <chart :options="profitItem"></chart>
   <chart :options="totalProfit"></chart>
 </div>
@@ -20,6 +31,7 @@ export default {
   data: function () {
     return {
       activeName: 'first',
+      period: [new Date().setHours(0, 0, 0, 0), Date.now()],
       profitItem: {
         title: {
           text: '盈利情况'
@@ -94,13 +106,21 @@ export default {
 
   methods: {
     // 获取收益数据
-    async getTrades () {
+
+    async getTrades (start = new Date().setHours(0, 0, 0, 0), end = Date.now()) {
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })                                   // 开启loading
-      let {data} = await api.getTrades()   // 价格趋势
+      let {data} = await api.getTrades({
+        query: {
+          timestamp: {
+            $gte: start,
+            $lt: end
+          }
+        }
+      })   // 价格趋势
       let source = data.data               // 交易原始数据
 
       // 时间收益表- 数据-------------
@@ -141,7 +161,15 @@ export default {
           },
         }
       )
+    },
+
+    handlerDateChange () {
+      const start = (new Date(this.period[0])).getTime()
+      const end = (new Date(this.period[1])).getTime()
+      // this.getTrades(start, end)
+      console.log(start, end)
     }
+
   }
 }
 </script>

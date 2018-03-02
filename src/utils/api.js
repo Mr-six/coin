@@ -39,33 +39,33 @@ export default {
   /**
    * 获取交易详情
    */
-  getTrades() {
-    return axios.post(`/api/tradesProfit`)
+  getTrades(body) {
+    return axios.post(`/api/tradesProfit`, body)
   },
   /**
    * 获取交易状态
    */
-  getTradeStatus() {
-    return axios.post(`/api/tradesStatus`)
+  getTradeStatus(body) {
+    return axios.post(`/api/tradesStatus`, body)
   },
   /**
    * 获取收益汇总
    */
-  getProfit() {
-    return axios.post(`/api/totalProfit`)
+  getProfit(body) {
+    return axios.post(`/api/totalProfit`, body)
   },
   /**
    * 获取交易所数字货币花费
    */
-  getCoinCost() {
-    return axios.post(`/api/coinCost`)
+  getCoinCost(body) {
+    return axios.post(`/api/coinCost`, body)
   },
 
   /**
    * 获取交易所现金花费
    */
-  getMoneyCost() {
-    return axios.post(`/api/moneyCost`)
+  getMoneyCost(body) {
+    return axios.post(`/api/moneyCost`, body)
   },
 
   /**
@@ -92,13 +92,13 @@ export default {
   /**
    * 获取错误日志
    */
-  getErrLog() {
-    return axios.post(`/api/errLog`)
+  getErrLog(body) {
+    return axios.post(`/api/errLog`, body)
   },
   /**
    * 获取系统信息
    */
-  getSysStatus () {
+  getSysStatus() {
     return axios(`/api/status`)
   }
 }
