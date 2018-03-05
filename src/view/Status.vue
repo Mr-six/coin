@@ -15,12 +15,12 @@
           <router-link :to="{ name: 'PlatformInfo'}">平台信息</router-link>
           <!-- <span slot="title">平台信息</span> -->
         </el-menu-item>
-        <el-menu-item index="2" disabled>
+        <el-menu-item index="2">
           <i class="el-icon-document"></i>
           <router-link :to="{ name: 'ErrorLog'}">错误日志</router-link>
           <!-- <span slot="title"></span> -->
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="3" disabled>
           <i class="el-icon-setting"></i>
           <span slot="title">其他</span>
         </el-menu-item>

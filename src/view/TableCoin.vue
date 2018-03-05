@@ -63,7 +63,7 @@
       // let {data} = await api.getPriceById('bitcoin')  // 价格趋势
       // let {data} = await api.getCoinRedditSub('bitcoin')  // 订阅趋势
       loadingInstance.close()               // 关闭loading
-      this.tableData = data
+      this.tableData = data.data
       console.log(data)
     },
     methods: {

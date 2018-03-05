@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+  }
+  .echarts {
+    height: 600px;
+    padding: 60px 0;
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .el-header {
+    padding: 0;
+  }
+  .header {
+    text-align: center;
+  }
+  .text-center {
+    text-align: center;
+  }
+  .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+
+  .clearfix:after {
+      clear: both
+  }
+  .el-menu-item a {
+    width: 98%;
+    display: inline-block;
+  }

@@ -1,16 +1,13 @@
 <template>
 <div>
-  <el-button type="primary" icon="el-icon-refresh" @click="getCost">点击刷新数据</el-button>
+  <date-picker :handlerDateChange="getCost" />
   <chart :options="coinCostItem"></chart>
   <chart :options="moneyCostItem"></chart>
 </div>
 </template>
 
 <style>
-.echarts {
-  height: 600px;
-  padding: 60px 0;
-}
+
 </style>
 
 <script>
@@ -87,40 +84,61 @@ export default {
   },
 
   async beforeMount () {
-    await this.getCost()
-    console.log('数据加载完成')
   },
 
   methods: {
     // 交易所收支详情
-    async getCost () {
+    async getCost (start, end) {
+
+      const argv = {
+        query: {
+          timestamp: {
+            $gte: start,
+            $lt: end
+          }
+        }
+      }
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })
-      let {data} = await api.getCoinCost()   // 货币花费
-      let dataM = await api.getMoneyCost()   // 货币花费
+      let {data: coinData} = await api.getCoinCost(argv)   // 货币花费
+      let {data: moneyDate} = await api.getMoneyCost(argv) // 货币花费
       loadingInstance.close()               // 关闭loading
-      let items = Object.keys(data.data)
-      this.coinCostItem.legend.data = items
-      items.forEach(el => {
-        this.coinCostItem.series.push({
-          name : el,
-          type: 'line',
-          data: data.data[el]
-        })
-      })
 
-      let itemsM = Object.keys(dataM.data.data)
-      this.moneyCostItem.legend.data = itemsM
-      itemsM.forEach(el => {
-        this.moneyCostItem.series.push({
-          name : el,
-          type: 'line',
-          data: dataM.data.data[el]
+
+      // 货币花费数据
+      if (coinData.data) {
+        this.coinCostItem.series = []
+        let items = Object.keys(coinData.data)
+        console.log(items)
+        this.coinCostItem.legend.data = items
+        items.forEach(el => {
+          this.coinCostItem.series.push({
+            name : el,
+            type: 'line',
+            data: coinData.data[el]
+          })
         })
-      })
+      } else {
+        this.coinCostItem.series = []
+      }
+
+      // 现金花费
+      if (moneyDate.data) {
+        this.moneyCostItem.series = []
+        let itemsM = Object.keys(moneyDate.data)
+        this.moneyCostItem.legend.data = itemsM
+        itemsM.forEach(el => {
+          this.moneyCostItem.series.push({
+            name : el,
+            type: 'line',
+            data: moneyDate.data[el]
+          })
+        })
+      }
+
     },
   }
 }

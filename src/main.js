@@ -1,8 +1,10 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+
 import App from './App'
 import router from './router'
+// import store from './store'
+import './style/main.css'
+import datePicker from './components/datePicker'
 
 // element ---------------------
 // import ElementUI from 'element-ui'
@@ -30,7 +32,9 @@ import {
   Progress,
   Pagination,
   DatePicker,
-  Tag
+  Tag,
+  TimeSelect,
+  TimePicker,
 } from 'element-ui'
 
 Vue.use(Header)
@@ -55,6 +59,7 @@ Vue.use(Aside)
 Vue.use(Progress)
 Vue.use(Pagination)
 Vue.use(DatePicker)
+// Vue.use(TimePicker)
 // element ---------------------
 
 // echarts ---------------------
@@ -83,6 +88,7 @@ import 'echarts/lib/chart/pie'
 Vue.component('chart', ECharts)
 // echarts ---------------------
 
+Vue.component('datePicker', datePicker)
 
 
 
@@ -92,6 +98,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  // store,
   template: '<App/>',
   components: { App }
 })

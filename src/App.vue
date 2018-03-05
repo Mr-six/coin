@@ -13,31 +13,7 @@
 </template>
 
 <style>
-  body {
-    margin: 0;
-  }
-  a {
-    color: #fff;
-    text-decoration: none;
-  }
-  .el-header {
-    padding: 0;
-  }
-  .header {
-    text-align: center;
-  }
-  .text-center {
-    text-align: center;
-  }
-  .clearfix:before,
-    .clearfix:after {
-        display: table;
-        content: "";
-    }
 
-    .clearfix:after {
-        clear: both
-    }
 </style>
 
 <script>

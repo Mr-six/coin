@@ -18,15 +18,18 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | b
 nvm install 8
 nvm alias default 8
 
-# 依赖安装 -----------------------------------
+# 项目依赖安装 -----------------------------------
 npm install --production
 
-# 启动项目 确保本地 mongodb 服务开启 连接配置： config/config.default.js
+# [本地node后端调试] 确保本地 mongodb 服务开启 连接配置： config/config.default.js
 npm run dev
+# [本地前端调试] 启动项目 确保本地 已经开启 npm run dev
+npm run local
 
-# 服务端启动
-npm run server # 启动服务
-npm run stop  # 停止服务
+
+# [服务端部署] 如果有依赖更新 在开启前 请执行一遍 npm install --production 以确保依赖为最新
+npm run server # 启动服务（当前项目根目录）
+npm run stop  # 停止服务（当前项目根目录）
 ```
 
 ## 使用框架

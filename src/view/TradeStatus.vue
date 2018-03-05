@@ -1,20 +1,17 @@
 <template>
   <div>
-    <el-button type="primary" icon="el-icon-refresh" @click="getTradeStatus">点击刷新数据</el-button>
-      <chart :options="statusItem"></chart>
+    <date-picker :handlerDateChange="getTradeStatus" />
+    <chart :options="statusItem"></chart>
   </div>
 </template>
 
 <style>
-.echarts {
-  height: 600px;
-  padding: 60px 0;
-}
+
 </style>
 
 <script>
 import {api} from '../utils'
-import { Loading } from 'element-ui'
+import { Loading, Notification } from 'element-ui'
 export default {
   data: function () {
     return {
@@ -38,26 +35,42 @@ export default {
   },
 
   async beforeMount () {
-    await this.getTradeStatus()
-    console.log('数据加载完成')
   },
 
   methods: {
     // 获取收益数据
-    async getTradeStatus () {
+    async getTradeStatus (start, end) {
+      const argv = {
+        query: {
+          timestamp: {
+            $gte: start,
+            $lt: end
+          }
+        }
+      }
+
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
-      })                                   // 开启loading
-      let {data} = await api.getTradeStatus()   // 订单状态
-      loadingInstance.close()             // 关闭loading
+      })                                            // 开启loading
+      let {data} = await api.getTradeStatus(argv)   // 订单状态
+      loadingInstance.close()                       // 关闭loading
       let tradeStatus = data.data
 
+      if (data.data && data.data.length) {
+        // 收益率饼图
+        this.statusItem.series[0].data = tradeStatus
+        const allTrades = data.data.reduce((a, b) => a.value + b.value)
 
-      // 收益率饼图
-      this.statusItem.series[0].data = tradeStatus
-
+        if (allTrades === 0) {
+          Notification.error({
+            title: '无数据',
+            message: '暂无交易数据',
+            duration: 2000
+          })
+        }
+      }
     },
   }
 }

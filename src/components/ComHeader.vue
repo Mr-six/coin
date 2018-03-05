@@ -9,8 +9,8 @@
     <el-menu-item index="2-4"><router-link :to="{ name: 'TradeStatus'}">交易状态</router-link></el-menu-item>
 
   </el-submenu>
-  <el-menu-item index="3" disabled><router-link :to="{ name: 'Account'}">用户中心</router-link></el-menu-item>
-  <el-menu-item index="4" disabled><router-link :to="{ name: 'Status'}">系统监控</router-link></el-menu-item>
+  <el-menu-item index="3"><router-link :to="{ name: 'Account'}">用户中心</router-link></el-menu-item>
+  <el-menu-item index="4"><router-link :to="{ name: 'Status'}">系统监控</router-link></el-menu-item>
   <el-menu-item index="5"><router-link :to="{ name: 'TableCoin'}">数字货币行情</router-link></el-menu-item>
 </el-menu>
 </template>

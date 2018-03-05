@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-button type="primary" icon="el-icon-refresh" @click="getProfitsPercent">点击刷新数据</el-button>
-      <chart v-if="activeName=='first'" :options="profitPercentItem"></chart>
-      <chart v-if="activeName=='first'" :options="pieItem"></chart>
+    <date-picker :handlerDateChange="getProfitsPercent" />
+    <chart v-if="activeName=='first'" :options="profitPercentItem"></chart>
+    <chart v-if="activeName=='first'" :options="pieItem"></chart>
   </div>
 </template>
 
@@ -70,42 +70,55 @@ export default {
   },
 
   async beforeMount () {
-    await this.getProfitsPercent()
-    console.log('数据加载完成')
   },
 
   methods: {
     // 获取收益数据
-    async getProfitsPercent () {
+    async getProfitsPercent (start, end) {
+      const argv = {
+        query: {
+          timestamp: {
+            $gte: start,
+            $lt: end
+          }
+        }
+      }
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })                                   // 开启loading
-      let {data} = await api.getProfitsPercent()   // 价格趋势
+      let {data} = await api.getProfitsPercent(argv)   // 价格趋势
       loadingInstance.close()             // 关闭loading
-      let source = data.data.profitPercent  // 原始数据 折线图
-      let pie = data.data.yields            // 收益率
+      console.log(data)
+      if (data.data && data.data.profitPercent && data.data.yields) {
+        let source = data.data.profitPercent  // 原始数据 折线图
+        let pie = data.data.yields            // 收益率
 
-      // 时间收益表- 数据-------------
-      this.profitPercentItem.dataset = {
-        sourceHeader: false,
-        source: source
-      }
-      // 数据格式
-      this.profitPercentItem.series.push(
-        {
-          type: 'line',
-          name: '盈利',
-          encode: {
-            x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
-            y: 'profitPercent', // 将 "profit" 列映射到 Y 轴
-            tooltip: ['timestamp', 'profitRate', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
-          },
+        // 时间收益表- 数据-------------
+        this.profitPercentItem.dataset = {
+          sourceHeader: false,
+          source: source
         }
-      )
-      // 收益率饼图
-      this.pieItem.series[0].data = pie
+        // 数据格式
+        this.profitPercentItem.series = [
+          {
+            type: 'line',
+            name: '盈利',
+            encode: {
+              x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
+              y: 'profitPercent', // 将 "profit" 列映射到 Y 轴
+              tooltip: ['timestamp', 'profitRate', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
+            },
+          }
+        ]
+        // 收益率饼图
+        this.pieItem.series[0].data = pie
+        console.log()
+      } else {
+        this.profitPercentItem.dataset = []    // 清空数据
+        this.pieItem.series[0].data = []
+      }
 
     },
   }

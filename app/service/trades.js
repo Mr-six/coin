@@ -1,23 +1,25 @@
 const Service = require('egg').Service
+const merge = require('deepmerge')
 
 class TradesService extends Service {
   // 交易原始数据
   async getTrades() {
     const { app, ctx } = this
     const body = ctx.request.body
-    const data = await app.mongo.find('trade_pair_document', {
-      ...body,
-      sort: { timestamp: 1 }
-    })
+    const defaults = { sort: { timestamp: 1 } }
+    const argv = Object.assign({}, defaults, body)
+    const data = await app.mongo.find('trade_pair_document', argv)
     return data
   }
 
   // 交易成功状态
   async getTradesStatus () {
     const { app, ctx } = this
-    // const body = ctx.request.body
-    const tradeSucce = await app.mongo.count('trade_pair_document', {query: {resolved: true}})
-    const tradeFalse = await app.mongo.count('trade_pair_document', {query: {resolved: false}})
+    const body = ctx.request.body
+    const resolvedQuery = merge(body, { query: { resolved: true } })
+    const pendingQuery = merge(body, { query: { resolved: false } })
+    const tradeSucce = await app.mongo.count('trade_pair_document', resolvedQuery)
+    const tradeFalse = await app.mongo.count('trade_pair_document', pendingQuery)
     return [{ value: tradeSucce, name: 'resolved trade' }, { value: tradeFalse, name: 'pending trade' }]
   }
 
