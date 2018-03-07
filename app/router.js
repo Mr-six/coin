@@ -11,5 +11,6 @@ module.exports = app => {
                           router.get('/api/balances', controller.api.balance) // 获取账户信息
                           router.get('/api/balancePreview', controller.api.balancePreview) // 获取账户信息
                           router.post('/api/errLog', controller.log.errLog) // 获取错误日志
-                          router.get('/api/status', controller.info.status)  // 获取系统信息
+                          router.get('/api/status', controller.info.status) // 获取系统信息
+                          router.get('/api/exchangeStatus', controller.info.exchangeStatus) // 获取交易所链接信息
                         }

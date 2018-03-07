@@ -31,6 +31,20 @@ class Status extends Service {
     }
     return system
   }
+  // 获取交易所信息
+  async getExchangeStatus () {
+    const { app, ctx } = this
+    let data = {
+      ExchangeStatusStore: {},
+      OrderBookStore: {},
+      // TradePairStore: {}
+    }
+    let keys = Object.keys(data)
+    for (let i = 0, l = keys.length; i < l; i++) {
+      data[keys[i]] = await app.redis.hgetall(keys[i])
+    }
+    return data
+  }
 }
 
 /**

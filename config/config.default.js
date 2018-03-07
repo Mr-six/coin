@@ -19,6 +19,14 @@ module.exports = {
       options: {}
     }
   },
+  redis: {
+    client: {
+      port: 6379, // Redis port
+      host: '127.0.0.1', // Redis host
+      password: '',
+      db: 0
+    }
+  },
   // Mock测试借口地址
   mock: {
     MocoUrl: 'https://www.easy-mock.com/mock/5a6ee3604c02fb3139acf15b/br'
