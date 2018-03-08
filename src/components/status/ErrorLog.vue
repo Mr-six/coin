@@ -57,7 +57,7 @@
 
 
 <script>
-  import {api} from '../utils'
+  import {api} from '../../utils'
   import { Loading } from 'element-ui'
   export default {
     data() {

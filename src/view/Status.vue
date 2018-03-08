@@ -12,19 +12,23 @@
 
         <el-menu-item index="1">
           <i class="el-icon-menu"></i>
-          <router-link :to="{ name: 'PlatformInfo'}">平台信息</router-link>
-          <!-- <span slot="title">平台信息</span> -->
+          <router-link slot="title" :to="{ name: 'ProgressStatus'}">程序状态</router-link>
         </el-menu-item>
         <el-menu-item index="2">
+          <i class="el-icon-info"></i>
+          <router-link slot="title" :to="{ name: 'PlatformInfo'}">平台信息</router-link>
+          <!-- <span slot="title">平台信息</span> -->
+        </el-menu-item>
+        <el-menu-item index="3">
           <i class="el-icon-document"></i>
           <router-link :to="{ name: 'ErrorLog'}">错误日志</router-link>
           <!-- <span slot="title"></span> -->
         </el-menu-item>
-        <el-menu-item index="3" disabled>
+        <el-menu-item index="4" disabled>
           <i class="el-icon-setting"></i>
           <span slot="title">其他</span>
         </el-menu-item>
-        <el-submenu index="4">
+        <el-submenu index="5">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>测试</span>

@@ -159,5 +159,19 @@ export default {
       sort: { timestamp: -1 }
     })
     return { start: start.data[0].timestamp, end: end.data[0].timestamp }
+  },
+
+  /**
+   * 获取交易所websocket链接状态
+   */
+  getExchangeStatus() {
+    return axios(`/api/exchangeStatus`)
+  },
+
+  /**
+   * 获取系统信息
+   */
+  getProgressStatus() {
+    return axios(`/api/progressStatus`)
   }
 }

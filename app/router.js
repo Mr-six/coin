@@ -13,4 +13,5 @@ module.exports = app => {
                           router.post('/api/errLog', controller.log.errLog) // 获取错误日志
                           router.get('/api/status', controller.info.status) // 获取系统信息
                           router.get('/api/exchangeStatus', controller.info.exchangeStatus) // 获取交易所链接信息
+                          router.get('/api/progressStatus', controller.info.progressStatus) // 获取交易所链接信息
                         }

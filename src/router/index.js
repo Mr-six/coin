@@ -9,8 +9,9 @@ import Account from '../view/Account'
 import TableCoin from '../view/TableCoin'
 import TradeStatus from '../view/TradeStatus'
 import Status from '../view/Status'
-import ErrorLog from '../components/ErrorLog'
-import PlatformInfo from '../components/PlatformInfo'
+import ErrorLog from '../components/status/ErrorLog'
+import PlatformInfo from '../components/status/PlatformInfo'
+import ProgressStatus from '../components/status/ProgressStatus'
 
 
 
@@ -56,7 +57,7 @@ export default new Router({
     {
       path: '/Status',
       name: 'Status',
-      redirect: '/Status/PlatformInfo',
+      redirect: '/Status/ProgressStatus',
       component: Status,
       children: [
         {
@@ -68,6 +69,11 @@ export default new Router({
           path: 'ErrorLog',
           name: 'ErrorLog',
           component: ErrorLog
+        },
+        {
+          path: 'ProgressStatus',
+          name: 'ProgressStatus',
+          component: ProgressStatus
         }
       ]
     }

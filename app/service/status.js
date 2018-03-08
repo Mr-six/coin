@@ -6,7 +6,7 @@ const Service = require('egg').Service
 class Status extends Service {
   // 获取系统信息
   async getStatus() {
-    const { app, ctx } = this
+    const { app } = this
     const G = 1024 * 1024 * 1024
     const dirc = await execShell('df -h')  // 查看磁盘目录
     const free = await execShell('free')  // 查看内存占用
@@ -33,7 +33,7 @@ class Status extends Service {
   }
   // 获取交易所信息
   async getExchangeStatus () {
-    const { app, ctx } = this
+    const { app } = this
     let data = {
       ExchangeStatusStore: {},
       OrderBookStore: {},
@@ -45,6 +45,40 @@ class Status extends Service {
     }
     return data
   }
+
+  // 程序运行状态信息
+  async getProgressStatus () {
+    const { app } = this
+    const NAME = 'move_bricks'  // 主进程名称
+    const progress = await execShell(`ps aux|grep ${NAME}`)  // 查看磁盘目录
+    if (progress instanceof Array && progress.length > 0) {
+      let data = progress.filter(el => {
+        if (el instanceof Array) {
+          return !el.includes('ps') && !el.includes('grep')
+        }
+      })
+      if (data.length > 0) {
+        data.unshift([
+          '用户',
+          'PID',
+          'CPU(%)',
+          '内存(%)',
+          'VSZ(虚拟内存量)',
+          'RSS(固定內存量)',
+          'TTY',
+          'STAT(状态)',
+          'START(启动时间)',
+          'TIME(CPU时间)'
+        ])
+      }
+
+      return data
+    } else {
+      return []
+    }
+
+  }
+
 }
 
 /**
