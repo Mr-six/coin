@@ -14,7 +14,7 @@
 </style>
 
 <script>
-import {api} from '../utils'
+import {api, config} from '../utils'
 import { Loading } from 'element-ui'
 export default {
   data: function () {
@@ -105,6 +105,7 @@ export default {
           {
             type: 'line',
             name: '盈利',
+            showSymbol: source.length < config.maxLength,
             encode: {
               x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
               y: 'profitPercent', // 将 "profit" 列映射到 Y 轴

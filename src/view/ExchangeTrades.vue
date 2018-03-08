@@ -11,7 +11,7 @@
 </style>
 
 <script>
-import {api} from '../utils'
+import {api, config} from '../utils'
 import { Loading } from 'element-ui'
 export default {
   data: function () {
@@ -118,6 +118,7 @@ export default {
           this.coinCostItem.series.push({
             name : el,
             type: 'line',
+            showSymbol: coinData.data[el].length < config.maxLength,
             data: coinData.data[el]
           })
         })
@@ -133,6 +134,7 @@ export default {
         itemsM.forEach(el => {
           this.moneyCostItem.series.push({
             name : el,
+            showSymbol: moneyDate.data[el].length < config.maxLength,
             type: 'line',
             data: moneyDate.data[el]
           })
