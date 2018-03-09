@@ -16,11 +16,19 @@ class TradesService extends Service {
   async getTradesStatus () {
     const { app, ctx } = this
     const body = ctx.request.body
-    const resolvedQuery = merge(body, { query: { resolved: true } })
+
+    const resolvedImmediQuery = merge(body, {
+      query: { resolved: true, resolvedImmediate: true }
+    })
+    const resolvedAfterQuery = merge(body, {
+      query: { resolved: true, resolvedImmediate: false }
+    })
     const pendingQuery = merge(body, { query: { resolved: false } })
-    const tradeSucce = await app.mongo.count('trade_pair_document', resolvedQuery)
-    const tradeFalse = await app.mongo.count('trade_pair_document', pendingQuery)
-    return [{ value: tradeSucce, name: 'resolved trade' }, { value: tradeFalse, name: 'pending trade' }]
+
+    const tradeImmedi = await app.mongo.count('trade_pair_document', resolvedImmediQuery)
+    const tradeAfter = await app.mongo.count('trade_pair_document', resolvedAfterQuery)
+    const tradePending = await app.mongo.count('trade_pair_document', pendingQuery)
+    return [{ value: tradeImmedi, name: 'resolved Immediately' }, { value: tradeAfter, name: 'resolved later' }, { value: tradePending, name: 'peending trades' }]
   }
 
   // 每笔收益情况
