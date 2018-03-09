@@ -1,7 +1,13 @@
 <template>
 <div>
-  <date-picker :handlerDateChange="getTrades" />
-  <chart :options="profitItem"></chart>
+  <date-picker :handlerDateChange="getTrades" :zoom="zoom" />
+  <div class="padding-top">
+      当前时间段内：
+      <el-tag type="success">
+        <b>累计盈利：{{total}}</b>
+      </el-tag>
+    </div>
+  <chart :options="profitItem" @datazoom="datazoomHandler"></chart>
   <chart :options="totalProfit"></chart>
 </div>
 </template>
@@ -16,10 +22,14 @@
 <script>
 import {api, config} from '../utils'
 import { Loading } from 'element-ui'
+import { clearTimeout } from 'timers';
 export default {
   data: function () {
     return {
       activeName: 'first',
+      total: 0,
+      zoom: {},
+      timer: '',
       profitItem: {
         title: {
           text: '盈利情况'
@@ -137,6 +147,7 @@ export default {
       loadingInstance.close()             // 关闭loading
       let total = res.data.data
       if (total.length) {
+        this.total = total[total.length - 1].profit
         // 收益累计表 -------------
         this.totalProfit.dataset = {
           sourceHeader: false,
@@ -159,6 +170,16 @@ export default {
       }
 
     },
+
+    // 监听缩放
+    datazoomHandler (e) {
+      if (e.start === 0 && e.end === 100) return
+      if (this.timer) window.clearTimeout(this.timer)
+      // console.log(window.clearTimeout)
+      this.timer = setTimeout(() => {
+        this.zoom = e
+      }, 1000)
+    }
   }
 }
 </script>

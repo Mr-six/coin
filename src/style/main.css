@@ -32,3 +32,6 @@ body {
     width: 98%;
     display: inline-block;
   }
+  .padding-top {
+    padding-top: 20px;
+  }

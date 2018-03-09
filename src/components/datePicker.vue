@@ -42,6 +42,9 @@ export default {
     handlerDateChange: {
       type: Function,
       require: true
+    },
+    zoom: {
+      type: Object,
     }
   },
   async beforeMount () {
@@ -65,7 +68,21 @@ export default {
       const end = (new Date(this.period[1])).getTime()
       this.handlerDateChange(start, end)
     }
+  },
+  watch: {
+    // zoom(n, o) {
+    //   if (!this.period || !this.period.length) return
+    //   if (n.start || n.end) {
+    //     console.log(this.period)
+    //     let dist = this.period[1] - this.period[0]
+
+    //     let start = this.period[0] + dist * (n.start ? n.start : 100) / 100
+    //     let end = this.period[0] + dist * (n.end ? n.end : 100) / 100
+    //     this.period = [start, end]
+    //     console.log(this.period)
+    //     this.getPeriodData()
+    //   }
+    // }
   }
 }
 </script>
-

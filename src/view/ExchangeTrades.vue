@@ -1,13 +1,34 @@
 <template>
 <div>
   <date-picker :handlerDateChange="getCost" />
+  <div class="padding-top">
+      当前时间段内：
+      <div class="showCase">
+        <b>数字货币花费：</b>
+        <el-tag v-for="e in coinCostData" :key="e.name" type="success">
+          <b>{{e.name + ' ' + e.cost[1]}}</b>
+        </el-tag>
+      </div>
+      <div class="showCase">
+        <b>现金花费：</b>
+        <el-tag v-for="e in moneyCostData" :key="e.name" type="success">
+          <b>{{e.name + ' ' + e.cost[1]}}</b>
+        </el-tag>
+      </div>
+    </div>
   <chart :options="coinCostItem"></chart>
   <chart :options="moneyCostItem"></chart>
 </div>
 </template>
 
 <style>
-
+.showCase {
+  padding: 8px 0;
+}
+.showCase > .el-tag {
+  /* display: block; */
+  margin: 6px;
+}
 </style>
 
 <script>
@@ -16,6 +37,8 @@ import { Loading } from 'element-ui'
 export default {
   data: function () {
     return {
+      coinCostData: [],
+      moneyCostData: [],
       coinCostItem: {
         title: {
           text: '数字货币数量详情(正为买入,负为卖出)'
@@ -107,12 +130,14 @@ export default {
       let {data: moneyDate} = await api.getMoneyCost(argv) // 货币花费
       loadingInstance.close()               // 关闭loading
 
-
       // 货币花费数据
-      if (coinData.data) {
+      if (!Array.isArray(coinData.data)) {
         this.coinCostItem.series = []
+        this.coinCostData = []
         let items = Object.keys(coinData.data)
+        console.log(coinData.data)
         console.log(items)
+
         this.coinCostItem.legend.data = items
         items.forEach(el => {
           this.coinCostItem.series.push({
@@ -121,14 +146,20 @@ export default {
             showSymbol: coinData.data[el].length < config.maxLength,
             data: coinData.data[el]
           })
+          this.coinCostData.push({
+            name: el,
+            cost: coinData.data[el][coinData.data[el].length - 1]
+          })
         })
+        console.log(this.coinCostData)
       } else {
-        this.coinCostItem.series = []
+        if (this.coinCostItem.series.length) this.coinCostItem.series = []
       }
 
       // 现金花费
-      if (moneyDate.data) {
+      if (!Array.isArray(moneyDate.data)) {
         this.moneyCostItem.series = []
+        this.moneyCostData = []
         let itemsM = Object.keys(moneyDate.data)
         this.moneyCostItem.legend.data = itemsM
         itemsM.forEach(el => {
@@ -138,7 +169,13 @@ export default {
             type: 'line',
             data: moneyDate.data[el]
           })
+          this.moneyCostData.push({
+            name: el,
+            cost: moneyDate.data[el][moneyDate.data[el].length - 1]
+          })
         })
+      } else {
+        if (this.moneyCostItem.series.length) this.moneyCostItem.series = []
       }
 
     },

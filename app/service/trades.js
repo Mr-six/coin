@@ -9,7 +9,7 @@ class TradesService extends Service {
     const defaults = { sort: { timestamp: 1 } }
     const argv = Object.assign({}, defaults, body)
     const data = await app.mongo.find('trade_pair_document', argv)
-    return data
+    return mergeTrades(data)
   }
 
   // 交易成功状态
@@ -28,7 +28,7 @@ class TradesService extends Service {
     const tradeImmedi = await app.mongo.count('trade_pair_document', resolvedImmediQuery)
     const tradeAfter = await app.mongo.count('trade_pair_document', resolvedAfterQuery)
     const tradePending = await app.mongo.count('trade_pair_document', pendingQuery)
-    return [{ value: tradeImmedi, name: 'resolved Immediately' }, { value: tradeAfter, name: 'resolved later' }, { value: tradePending, name: 'peending trades' }]
+    return [{ value: tradeImmedi, name: 'resolved Immediately', itemStyle: { color: '#96D7AC' } }, { value: tradeAfter, name: 'resolved later', itemStyle: { color: '#FFCC74' } }, { value: tradePending, name: 'peending trades', itemStyle: { color: '#F56C6C' } }]
   }
 
   // 每笔收益情况
@@ -163,6 +163,72 @@ class TradesService extends Service {
       })
     })
     return data
+  }
+}
+
+function mergeTrades (data) {
+  const l = data.length
+  switch (true) {
+    case l < 6000:
+      return data
+      break
+    case l > 6000 && l < 12000:
+      return merge(data, 2)
+      break
+    case l > 12000 && l < 24000:
+      return merge(data, 2)
+      break
+    case l > 24000 && l < 36000:
+      return merge(data, 4)
+      break
+    case l > 36000 && l < 48000:
+      return merge(data, 8)
+      break
+    case l > 48000 && l < 10000:
+      return merge(data, 10)
+      break
+    default:
+      return merge(data, 10)
+      break
+  }
+
+  // 合并函数
+  function merge(data, len) {
+    let margedData = []
+    let tradePairs = {}
+    data.forEach((el, i) => {
+      let tradePair = el.buyExchange + '-' + el.sellExchange
+      if (!tradePairs[tradePair]) tradePairs[tradePair] = []
+      tradePairs[tradePair].push(el)
+      for(let k in tradePairs) {
+        if (tradePairs[k].length >= len || ((i == data.length - 1) && tradePairs[k].length)) {
+          let margedPari = mergeParis(tradePairs[k], len)
+          if (margedPari) margedData.push(margedPari)
+          tradePairs[k] = [] // 清空
+        }
+      }
+    })
+    return margedData
+  }
+
+  // 合并交易对
+  function mergeParis(data, len) {
+    if (!data.length) return
+    let mergePari = data[data.length - 1]
+
+    data.forEach((el, i) => {
+      if (i === (data.length - 1)) return
+      // mergePari.timestamp += el.timestamp
+      mergePari.profitRate += el.profitRate
+      mergePari.profit += el.profit
+      mergePari.sellPrice += el.sellPrice
+      mergePari.sellAmount += el.sellAmount
+      mergePari.buyPrice += el.buyPrice
+      mergePari.buyAmount += el.buyAmount
+    })
+    mergePari.profitRate = mergePari.profitRate / data.length
+    // mergePari.timestamp = mergePari.timestamp / data.length
+    return mergePari
   }
 }
 
