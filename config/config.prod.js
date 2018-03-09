@@ -4,7 +4,7 @@ module.exports = {
   // 安全配置
   security: {
     csrf: {
-      enable: true
+      enable: false
     }
   }
 }
