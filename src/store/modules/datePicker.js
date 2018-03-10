@@ -3,8 +3,8 @@
  */
 
 const state = {
-  start: '',
-  end: ''
+  start: 0,
+  end: 0
 }
 
 const mutations = {

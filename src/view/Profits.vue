@@ -22,14 +22,17 @@
 <script>
 import {api, config} from '../utils'
 import { Loading } from 'element-ui'
-import { clearTimeout } from 'timers';
+import commen from '../mixins/commen'
 export default {
+  mixins: [commen],
   data: function () {
     return {
       activeName: 'first',
       total: 0,
-      zoom: {},
-      timer: '',
+      dataPeirod: {
+        start: 0,
+        range: 0
+      },
       profitItem: {
         title: {
           text: '盈利情况'
@@ -121,6 +124,10 @@ export default {
       let source = data.data               // 交易原始数据
 
       if (source.length) {
+        // 设置数据时间区间
+        const start = source[0].timestamp
+        const range = source[source.length - 1].timestamp - start
+        this.dataPeirod = {start, range}
         // 时间收益表- 数据-------------
         this.profitItem.dataset = {
           sourceHeader: false,
@@ -170,15 +177,14 @@ export default {
       }
 
     },
-
-    // 监听缩放
-    datazoomHandler (e) {
-      if (e.start === 0 && e.end === 100) return
-      if (this.timer) window.clearTimeout(this.timer)
-      // console.log(window.clearTimeout)
-      this.timer = setTimeout(() => {
-        this.zoom = e
-      }, 1000)
+  },
+  watch: {
+    zoom (newData, oldData) {
+      if (newData.start === oldData.start && newData.end === oldData.end) return false
+      if (!this.dataPeirod.start) return false
+      const start = this.dataPeirod.start + newData.start * this.dataPeirod.range / 100
+      const end = this.dataPeirod.start + newData.end * this.dataPeirod.range / 100
+      this.getTrades(start, end)
     }
   }
 }
