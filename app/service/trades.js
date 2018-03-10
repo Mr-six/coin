@@ -184,11 +184,20 @@ function mergeTrades (data) {
     case l > 36000 && l < 48000:
       return merge(data, 8)
       break
-    case l > 48000 && l < 10000:
+    case l > 48000 && l < 80000:
       return merge(data, 10)
       break
+    case l > 80000 && l < 120000:
+      return merge(data, 20)
+      break
+    case l > 120000 && l < 300000:
+      return merge(data, 30)
+      break
+    case l > 300000 && l < 500000:
+      return merge(data, 50)
+      break
     default:
-      return merge(data, 10)
+      return merge(data, 100)
       break
   }
 
