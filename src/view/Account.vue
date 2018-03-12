@@ -2,16 +2,16 @@
 <div>
   <el-tabs v-model="activeName" @tab-click="handleTabClick">
     <el-tab-pane label="账户余额" name="first">
-      <el-row v-if="accountPreview.length" :gutter="20">
-        <el-col :span="6" v-for="ex in accountPreview" :key="ex.timestamp">
+      <el-row v-if="accountPreview" :gutter="20">
+        <el-col :span="6" v-for="(v, k) in accountPreview" :key="k">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
-              <span>{{ '余额 ' + ex.exchange_name }}</span>
-              <el-button style="float: right; padding: 3px 0" type="text">查看图表</el-button>
+              <span>{{ '余额 ' + k }}</span>
+              <el-button style="float: right; padding: 3px 0" type="text"></el-button>
             </div>
-            <div v-for="(v, k) in ex.account_ballance" :key="v">
-              <balance-item :symbol="k" :amount="v">
-                {{ k + ': ' + v }}
+            <div v-for="(val, key) in v" :key="key">
+              <balance-item :symbol="key" :amount="val">
+                {{ key + ': ' + val }}
               </balance-item>
 
             </div>
@@ -20,15 +20,7 @@
       </el-row>
     </el-tab-pane>
     <el-tab-pane label="图表展示" name="second">
-      <el-button type="primary" icon="el-icon-refresh" @click="getAccount">点击刷新数据</el-button>
-      选择币种：
-      <el-select v-model="selectVal" placeholder="btc" @change="selectChange">
-        <el-option
-          v-for="item in selects"
-          :key="item.value"
-          :value="item.value">
-        </el-option>
-      </el-select>
+      <el-button type="primary" icon="el-icon-refresh" @click="balanceTotal">点击刷新数据</el-button>
 
       <chart v-if="activeName=='second'" :options="accountItem"></chart>
     </el-tab-pane>
@@ -61,7 +53,7 @@ export default {
     return {
       selectVal: 'btc',
       activeName: 'first',
-      accountPreview: [],
+      accountPreview: '',
       selects: [{value: 'btc'},{value: 'eth'},{value: 'usd'},{value: 'bch'}],
       accountItem: {
         title: {
@@ -111,22 +103,23 @@ export default {
         body: true,
         text: '数据加载中……'
       })
-      let {data} = await api.getAccountPreview()   // 账户余额
+      let {data} = await api.getBalance({
+        limit: 1
+      })   // 账户余额
       if (data.success) {
-        this.accountPreview = data.data
+        this.accountPreview = data.data[0].balances
         loadingInstance.close()               // 关闭loading
       }
     },
     // 获取收益数据
-    async getAccount () {
+    async balanceTotal () {
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })
-      const symbol = this.selectVal
-      let {data} = await api.getAccount(symbol)   // 账户余额
-      loadingInstance.close()                     // 关闭loading
+      let {data} = await api.getBalanceTotal()   // 账户余额
+      loadingInstance.close()                 // 关闭loading
       console.log(data)
       this.accountItem.series = []
       let items = Object.keys(data.data)
@@ -144,12 +137,12 @@ export default {
     handleTabClick(tab, event) {
       // console.log(tab, event)
       if (tab.name === 'second') {
-        this.getAccount()
+        this.balanceTotal()
       }
     },
     // select 切换
     selectChange (e) {
-      this.getAccount()
+      this.balanceTotal()
     },
     getClass (k, v) {
       return v

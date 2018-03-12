@@ -52,9 +52,9 @@ class HomeController extends Controller {
     ctx.body = { success: true, data: res }
   }
   // 获取余额预览
-  async balancePreview() {
+  async balanceTotal() {
     const ctx = this.ctx
-    const res = await ctx.service.balances.getBalancePreview()
+    const res = await ctx.service.balances.getBalanceTotal()
     ctx.body = { success: true, data: res }
   }
 }

@@ -116,8 +116,8 @@ export default {
   /**
    * 获取货币交易数量
    */
-  getAccount(symbol = 'btc') {
-    return axios(`/api/balances?symbol=${symbol}`)
+  getBalance(body) {
+    return axios.post(`/api/balances`, body)
   },
 
   /**
@@ -130,8 +130,8 @@ export default {
   /**
    * 获取交易所账户预览
    */
-  getAccountPreview() {
-    return axios(`/api/balancePreview`)
+  getBalanceTotal(body) {
+    return axios.post(`/api/balanceTotal`, body)
   },
 
   /**
@@ -174,4 +174,8 @@ export default {
   getProgressStatus() {
     return axios(`/api/progressStatus`)
   }
+
+  /**
+   * 获取账户余额预览
+   */
 }

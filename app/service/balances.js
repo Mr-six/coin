@@ -4,37 +4,28 @@ class BalancesService extends Service {
   // 获取余额原始数据
   async getBalance() {
     const { app, ctx } = this
-    const query = ctx.query
-    if (!query.symbol) return { success: false, msg: 'parmas err' }
-    // 暂时使用mock数据代替
-    const { MocoUrl } = this.config.mock
-    const { data } = await this.ctx.curl(`${MocoUrl}/api/balance`, {
-      dataType: 'json'
-    })
+    const body = ctx.request.body
+    const defaults = { sort: { timestamp: 1 } }
+    const argv = Object.assign({}, defaults, body)
+    const data = await app.mongo.find('account_ballance_document', argv)
+    return data
+  }
 
-    let res = {}
-
-    data.data.forEach((el, i) => {
-      if (!res[el.exchange_name]) res[el.exchange_name] = []
-      if (el.account_ballance[query.symbol]) {
-        res[el.exchange_name].push([
-          el.timestamp,
-          el.account_ballance[query.symbol]
-        ])
+  // 获取时间点余额总和
+  async getBalanceTotal() {
+    const { app, ctx } = this
+    const balances = await this.getBalance()
+    const totalBalance = {}
+    balances.forEach((el, i) => {
+      const timestamp = el.timestamp
+      for (let e_k in el.balances) {
+        for (let s_k in el.balances[e_k]) {
+          if (!totalBalance[s_k]) totalBalance[s_k] = []
+          totalBalance[s_k].push([timestamp, el.balances[e_k][s_k]])
+        }
       }
     })
-
-    return res
-  }
-  async getBalancePreview () {
-    const { app, ctx } = this
-
-    // 暂时使用mock数据代替
-    const { MocoUrl } = this.config.mock
-    const { data } = await this.ctx.curl(`${MocoUrl}/api/balancepreview`, {
-      dataType: 'json'
-    })
-    return data.data
+    return totalBalance
   }
 }
 
