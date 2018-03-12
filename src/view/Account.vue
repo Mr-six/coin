@@ -104,6 +104,7 @@ export default {
         text: '数据加载中……'
       })
       let {data} = await api.getBalance({
+        sort: { timestamp: -1 },
         limit: 1
       })   // 账户余额
       if (data.success) {
