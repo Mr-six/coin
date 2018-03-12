@@ -23,6 +23,7 @@
       <el-button type="primary" icon="el-icon-refresh" @click="balanceTotal">点击刷新数据</el-button>
 
       <chart v-if="activeName=='second'" :options="accountItem"></chart>
+      <chart v-if="activeName=='second'" :options="btcItem"></chart>
     </el-tab-pane>
     <el-tab-pane label="其他" name="fourth">
       空
@@ -58,6 +59,38 @@ export default {
       accountItem: {
         title: {
           text: '账户余额'
+        },
+        tooltip: {},
+        legend: {
+          data:[]
+        },
+        xAxis: {
+          type: 'time'
+        },
+        yAxis: {},
+        dataZoom: [
+          {
+          type: 'slider',
+          xAxisIndex: [0],
+          show: true,
+          start: 0,
+          end: 100,
+        },
+        {
+          type: 'slider',
+          yAxisIndex: [0],
+          show: true,
+          start: 0,
+          end: 100,
+        }
+        ],
+        dataset: {},
+        series: [],
+        // animationDuration: 2000
+      },
+      btcItem: {
+        title: {
+          text: 'btc账户余额'
         },
         tooltip: {},
         legend: {
@@ -138,6 +171,13 @@ export default {
             type: 'line',
             data: data.data[el]
           })
+          if (el === 'BTC') {
+            this.btcItem.series.push({
+              name : el,
+              type: 'line',
+              data: data.data[el]
+            })
+          }
         })
       }
     },
