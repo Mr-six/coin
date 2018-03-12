@@ -107,9 +107,9 @@ export default {
         sort: { timestamp: -1 },
         limit: 1
       })   // 账户余额
+      loadingInstance.close()               // 关闭loading
       if (data.success) {
         this.accountPreview = data.data[0].balances
-        loadingInstance.close()               // 关闭loading
       }
     },
     // 获取收益数据
@@ -121,17 +121,18 @@ export default {
       })
       let {data} = await api.getBalanceTotal()   // 账户余额
       loadingInstance.close()                 // 关闭loading
-      console.log(data)
-      this.accountItem.series = []
-      let items = Object.keys(data.data)
-      this.accountItem.legend.data = items
-      items.forEach(el => {
-        this.accountItem.series.push({
-          name : el,
-          type: 'line',
-          data: data.data[el]
+      if (data.success) {
+        this.accountItem.series = []
+        let items = Object.keys(data.data)
+        this.accountItem.legend.data = items
+        items.forEach(el => {
+          this.accountItem.series.push({
+            name : el,
+            type: 'line',
+            data: data.data[el]
+          })
         })
-      })
+      }
     },
 
     // 列表切换
