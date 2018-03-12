@@ -19,20 +19,23 @@ class BalancesService extends Service {
     balances.forEach((el, i) => {
       const timestamp = el.timestamp
       let objBalances = el.balances
-      for (let e_k in objBalances) {
-        let objExchage
-        if (typeof objBalances[e_k] === 'string') {
-          objExchage = JSON.parse(objBalances[e_k])
-        } else {
-          objExchage = objBalances[e_k]
-        }
-        for (let s_k in objExchage) {
-          if (!totalBalance[s_k]) totalBalance[s_k] = []
-          totalBalance[s_k].push([timestamp, objExchage[s_k]])
-        }
+      let exchanges = Object.keys(objBalances)  // 交易所
+      let symbols
+
+      if (typeof objBalances[exchanges[0]] === 'string') {
+        symbols = Object.keys(JSON.parse(objBalances[exchanges[0]]))
+      } else {
+        symbols = Object.keys(objBalances[exchanges[0]])
       }
+      symbols.forEach((e_s, i) => {
+        if (!totalBalance[e_s]) totalBalance[e_s] = []
+        let total = 0
+        exchanges.forEach((e_e, i) => {
+          total += objBalances[e_e][e_s] ? objBalances[e_e][e_s] : 0
+        })
+        totalBalance[e_s].push([timestamp, total])
+      })
     })
-    console.log(totalBalance)
     return totalBalance
   }
 }
