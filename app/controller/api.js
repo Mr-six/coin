@@ -55,10 +55,9 @@ class HomeController extends Controller {
   async balanceTotal() {
     const ctx = this.ctx
     const res = await ctx.service.balances.getBalanceTotal()
-    if (res.length) {
+    if (!Array.isArray(res)) {
       ctx.body = { success: true, data: res }
-    }
-    else {
+    } else {
       ctx.body = { success: false, data: [] }
     }
   }

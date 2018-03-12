@@ -18,12 +18,7 @@ class BalancesService extends Service {
     const totalBalance = {}
     balances.forEach((el, i) => {
       const timestamp = el.timestamp
-      let objBalances
-      if (typeof el.balances === 'string') {
-        objBalances = JSON.parse(el.balances)
-      } else {
-        objBalances = el.balances
-      }
+      let objBalances = el.balances
       for (let e_k in objBalances) {
         let objExchage
         if (typeof objBalances[e_k] === 'string') {
@@ -37,6 +32,7 @@ class BalancesService extends Service {
         }
       }
     })
+    console.log(totalBalance)
     return totalBalance
   }
 }
