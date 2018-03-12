@@ -18,10 +18,16 @@ class BalancesService extends Service {
     const totalBalance = {}
     balances.forEach((el, i) => {
       const timestamp = el.timestamp
-      for (let e_k in el.balances) {
-        for (let s_k in el.balances[e_k]) {
+      let objBalances
+      if (typeof el.balances === 'string') {
+        objBalances = JSON.parse(el.balances)
+      } else {
+        objBalances = el.balances
+      }
+      for (let e_k in objBalances) {
+        for (let s_k in objBalances[e_k]) {
           if (!totalBalance[s_k]) totalBalance[s_k] = []
-          totalBalance[s_k].push([timestamp, el.balances[e_k][s_k]])
+          totalBalance[s_k].push([timestamp, objBalances[e_k][s_k]])
         }
       }
     })

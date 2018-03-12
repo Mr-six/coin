@@ -109,7 +109,12 @@ export default {
       })   // 账户余额
       loadingInstance.close()               // 关闭loading
       if (data.success) {
-        this.accountPreview = data.data[0].balances
+        balances = data.data[0].balances
+        if (typeof balances === 'string') {
+          this.accountPreview = JSON.parse(balances)
+        } else {
+          this.accountPreview = balances
+        }
       }
     },
     // 获取收益数据
