@@ -31,6 +31,7 @@ class BalancesService extends Service {
         if (!totalBalance[e_s]) totalBalance[e_s] = []
         let total = 0
         exchanges.forEach((e_e, i) => {
+          if (typeof objBalances[e_e] === 'string') objBalances[e_e] = JSON.parse(objBalances[e_e])
           total += objBalances[e_e][e_s] ? objBalances[e_e][e_s] : 0
         })
         totalBalance[e_s].push([timestamp, total])
