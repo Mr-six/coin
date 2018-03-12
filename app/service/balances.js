@@ -25,9 +25,15 @@ class BalancesService extends Service {
         objBalances = el.balances
       }
       for (let e_k in objBalances) {
-        for (let s_k in objBalances[e_k]) {
+        let objExchage
+        if (typeof objBalances[e_k] === 'string') {
+          objExchage = JSON.parse(objBalances[e_k])
+        } else {
+          objExchage = objBalances[e_k]
+        }
+        for (let s_k in objExchage) {
           if (!totalBalance[s_k]) totalBalance[s_k] = []
-          totalBalance[s_k].push([timestamp, objBalances[e_k][s_k]])
+          totalBalance[s_k].push([timestamp, objExchage[s_k]])
         }
       }
     })

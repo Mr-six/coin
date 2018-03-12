@@ -109,12 +109,14 @@ export default {
       })   // 账户余额
       loadingInstance.close()               // 关闭loading
       if (data.success) {
-        balances = data.data[0].balances
-        if (typeof balances === 'string') {
-          this.accountPreview = JSON.parse(balances)
-        } else {
-          this.accountPreview = balances
+        // console.log(data.data[0].balances)
+        let balances = data.data[0].balances
+        if (typeof balances === 'object') {
+          for (let k in balances) {
+            balances[k] = typeof balances[k] === 'string' ? JSON.parse(balances[k]) : balances[k]
+          }
         }
+        this.accountPreview = balances
       }
     },
     // 获取收益数据
