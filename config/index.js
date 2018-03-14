@@ -4,10 +4,13 @@
 
 const path = require('path')
 
-const tarMoke = 'http://34.238.142.123'
-const tarTest = 'http://127.0.0.1:3001'
+const URL = {
+  awsUrl: 'http://34.238.142.123',
+  aliUrl: 'http://47.74.181.136',
+  localUrl: 'http://127.0.0.1:3001'
+}
 
-const proxyUrl = process.env.NODE_ENV === 'local' ? tarTest : tarMoke
+const proxyUrl = process.env.NODE_ENV === 'local' ? URL.localUrl : URL.aliUrl
 
 module.exports = {
   dev: {

@@ -3,24 +3,28 @@
  */
 
 const state = {
+  period: [
+    new Date().setHours(0, 0, 0, 0),
+    new Date().setHours(23, 59, 59, 59)
+  ],
   start: 0,
   end: 0
 }
 
 const mutations = {
-  CHANGE (state, date) {
-    state = Object.assign(state, date)
+  CHANGEPERIOD (state, date) {
+    state.period = date
   }
 }
 
 const actions = {
-  change ({ commit }, date) {
-    commit(CHANGE, date)
+  changePeriod ({ commit }, date) {
+    commit('CHANGEPERIOD', date)
   }
 }
 
 const getters = {
-  getDate : state => state
+  getPeriod: state => state.period
 }
 
 export default {

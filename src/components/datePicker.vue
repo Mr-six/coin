@@ -26,7 +26,6 @@ export default {
     return {
       startDate: '',
       endDate: '',
-      period: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 59)],
       pickerOptions: {
         disabledDate: (time) => {
           if (this.startDate && this.endDate) {
@@ -43,13 +42,23 @@ export default {
       type: Function,
       require: true
     },
-    zoom: {
-      type: Object,
-    }
+    // zoom: {
+    //   type: Object,
+    // }
   },
   async beforeMount () {
     await this.initAvailablePeriod()
     await this.getPeriodData()
+  },
+  computed: {
+    period: {
+      get () {
+        return this.$store.getters.getPeriod
+      },
+      set (value) {
+        this.$store.dispatch('changePeriod', value)
+      }
+    }
   },
   methods: {
     // 初始化数据可用日期

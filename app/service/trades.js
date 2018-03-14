@@ -166,40 +166,17 @@ class TradesService extends Service {
   }
 }
 
-function mergeTrades (data) {
+/**
+ * 对订原始单进行合并聚合，将相同比交易对进行合并
+ * @param {Array} data 原始订单数据
+ * @param {Number} len 返回最大长度
+ */
+function mergeTrades (data, len = 6000) {
   const l = data.length
-  switch (true) {
-    case l < 6000:
-      return data
-      break
-    case l > 6000 && l < 12000:
-      return merge(data, 2)
-      break
-    case l > 12000 && l < 24000:
-      return merge(data, 2)
-      break
-    case l > 24000 && l < 36000:
-      return merge(data, 4)
-      break
-    case l > 36000 && l < 48000:
-      return merge(data, 8)
-      break
-    case l > 48000 && l < 80000:
-      return merge(data, 10)
-      break
-    case l > 80000 && l < 120000:
-      return merge(data, 20)
-      break
-    case l > 120000 && l < 300000:
-      return merge(data, 30)
-      break
-    case l > 300000 && l < 500000:
-      return merge(data, 50)
-      break
-    default:
-      return merge(data, 100)
-      break
-  }
+  if (l <= len) return data
+  const mergeCount = Math.ceil(l / len)
+
+  return merge(data, mergeCount)
 
   // 合并函数
   function merge(data, len) {

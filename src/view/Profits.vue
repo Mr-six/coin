@@ -1,6 +1,6 @@
 <template>
 <div>
-  <date-picker :handlerDateChange="getTrades" :zoom="zoom" />
+  <date-picker :handlerDateChange="getTrades"/>
   <div class="padding-top">
       当前时间段内：
       <el-tag type="success">

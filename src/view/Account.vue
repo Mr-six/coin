@@ -7,9 +7,9 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>{{ '余额 ' + k }}</span>
-              <el-button style="float: right; padding: 3px 0" type="text"></el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">时间 {{balanceTimestamp}}</el-button>
             </div>
-            <div v-for="(val, key) in v" :key="key">
+            <div v-for="(val, key) in v" :key="key" class="balnce-item">
               <balance-item :symbol="key" :amount="val">
                 {{ key + ': ' + val }}
               </balance-item>
@@ -20,10 +20,19 @@
       </el-row>
     </el-tab-pane>
     <el-tab-pane label="图表展示" name="second">
-      <el-button type="primary" icon="el-icon-refresh" @click="balanceTotal">点击刷新数据</el-button>
+      <date-picker :handlerDateChange="balanceTotal"/>
 
       <chart v-if="activeName=='second'" :options="accountItem"></chart>
-      <chart v-if="activeName=='second'" :options="btcItem"></chart>
+      <h3>对比图</h3>
+      <el-select v-model="selectVal" @change="selectChange" placeholder="请选择">
+        <el-option
+          v-if="balanceAllDate"
+          v-for="(v, k) in balanceAllDate"
+          :key="k"
+          :value="k">
+        </el-option>
+      </el-select>
+      <chart v-if="activeName=='second'" :options="symbolItem"></chart>
     </el-tab-pane>
     <el-tab-pane label="其他" name="fourth">
       空
@@ -52,10 +61,12 @@ import { Loading } from 'element-ui'
 export default {
   data: function () {
     return {
-      selectVal: 'btc',
+      selectVal: 'BTC',
       activeName: 'first',
+      balanceTimestamp: '',
       accountPreview: '',
-      selects: [{value: 'btc'},{value: 'eth'},{value: 'usd'},{value: 'bch'}],
+      balanceAllDate: '',
+
       accountItem: {
         title: {
           text: '账户余额'
@@ -88,9 +99,9 @@ export default {
         series: [],
         // animationDuration: 2000
       },
-      btcItem: {
+      symbolItem: {
         title: {
-          text: 'btc账户余额'
+          text: 'BTC账户余额'
         },
         tooltip: {},
         legend: {
@@ -142,7 +153,12 @@ export default {
       })   // 账户余额
       loadingInstance.close()               // 关闭loading
       if (data.success) {
-        // console.log(data.data[0].balances)
+
+        let t = data.data[0].timestamp
+        if (t) {  // 设置余额最后更新时间
+          t = new Date(t)
+          this.balanceTimestamp = t.toLocaleDateString() + '-' + t.toLocaleTimeString()
+        }
         let balances = data.data[0].balances
         if (typeof balances === 'object') {
           for (let k in balances) {
@@ -153,15 +169,25 @@ export default {
       }
     },
     // 获取收益数据
-    async balanceTotal () {
+    async balanceTotal (start, end) {
+      const argv = {
+        query: {
+          timestamp: {
+            $gte: start,
+            $lt: end
+          }
+        }
+      }
       let loadingInstance = Loading.service({
         fullscreen: true,
         body: true,
         text: '数据加载中……'
       })
-      let {data} = await api.getBalanceTotal()   // 账户余额
+      let {data} = await api.getBalanceTotal(argv)   // 账户余额
+      console.log(data)
       loadingInstance.close()                 // 关闭loading
       if (data.success) {
+        this.balanceAllDate = data.data
         this.accountItem.series = []
         let items = Object.keys(data.data)
         this.accountItem.legend.data = items
@@ -171,30 +197,35 @@ export default {
             type: 'line',
             data: data.data[el]
           })
-          if (el === 'BTC') {
-            this.btcItem.series.push({
-              name : el,
-              type: 'line',
-              data: data.data[el]
-            })
-          }
         })
+        this.showCompare()
       }
+    },
+
+    // 绘制对比图
+    showCompare () {
+      const symbol = this.selectVal
+      const allData = this.balanceAllDate
+      this.symbolItem.title.text = `${symbol}账户余额`
+      this.symbolItem.series= []
+      this.symbolItem.series.push({
+        name : symbol,
+        type: 'line',
+        data: allData[symbol]
+      })
     },
 
     // 列表切换
     handleTabClick(tab, event) {
       // console.log(tab, event)
       if (tab.name === 'second') {
-        this.balanceTotal()
+        // this.balanceTotal()
       }
     },
     // select 切换
     selectChange (e) {
-      this.balanceTotal()
-    },
-    getClass (k, v) {
-      return v
+      console.log(e)
+      this.showCompare()
     },
   },
   computed: {
