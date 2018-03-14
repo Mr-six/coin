@@ -16,11 +16,13 @@ class BalancesService extends Service {
     const { app, ctx } = this
     const balances = await this.getBalance()
     if (!balances.length) return []
+    const exLen = Object.keys(balances[balances.length - 1].balances).length  // 完整数据交易所长度
     const totalBalance = {}
     balances.forEach((el, i) => {
       const timestamp = el.timestamp
       let objBalances = el.balances
       let exchanges = Object.keys(objBalances)  // 交易所
+      if (exchanges.length < exLen) return  // 交易所数据不全
       let symbols
 
       if (typeof objBalances[exchanges[0]] === 'string') {
