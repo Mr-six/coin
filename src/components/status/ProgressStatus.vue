@@ -120,6 +120,10 @@
           for (let v in ExchangeStatus) {
             if (typeof ExchangeStatus[v] === 'string') {
               ExchangeStatus[v] = JSON.parse(ExchangeStatus[v])
+              console.log(ExchangeStatus[v])
+              if (ExchangeStatus[v].depth_restart_time) {
+                ExchangeStatus[v].depth_restart_time = new Date(parseInt(ExchangeStatus[v].depth_restart_time))
+              }
             }
           }
 

@@ -18,8 +18,20 @@
 
 <script>
   import  comHeader from './components/ComHeader'
+  import {api} from './utils'
   export default {
     name: 'app',
+    async beforeMount () {
+      this.initTitle()
+    },
+    methods: {
+      async initTitle () {
+        let {data} = await api.getSysStatus()   // 获取数据
+        let hostName = data.data.hostname
+        if (hostName) document.title = hostName
+      }
+    },
+
     components: {
       comHeader
     }

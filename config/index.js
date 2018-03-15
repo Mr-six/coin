@@ -10,7 +10,7 @@ const URL = {
   localUrl: 'http://127.0.0.1:3001'
 }
 
-const proxyUrl = process.env.NODE_ENV === 'local' ? URL.localUrl : URL.aliUrl
+const proxyUrl = process.env.NODE_ENV === 'local' ? URL.localUrl : URL.awsUrl
 
 module.exports = {
   dev: {
