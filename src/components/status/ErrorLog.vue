@@ -91,8 +91,8 @@
       },
       formatterTime(row, column) {
         // console.log(row.price_usd)
-        let t = new Date(row.timestamp)
-        return (t.toLocaleDateString() + '-' + t.toLocaleTimeString())
+        let t = new Date(row.timestamp).toLocaleString()
+        return t
       },
       handlePageChange (val) {
         this.getErrorLog(val)

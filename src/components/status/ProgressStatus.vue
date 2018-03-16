@@ -15,6 +15,24 @@
           </div>
         </div>
       </el-card>
+      <el-collapse v-model="activeName" accordion>
+        <el-collapse-item title="OrderBookStore" name="1">
+          <template slot="title">
+            <el-tag type="success"><b>OrderBookStore</b></el-tag>
+          </template>
+          <div v-if="OrderBookStore" v-for="(v, k) in OrderBookStore" :key="k">
+            <p>{{k + '------' + v}}</p>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item title="TradePairStore" name="2">
+          <template slot="title">
+            <el-tag type="success"><b>TradePairStore</b></el-tag>
+          </template>
+          <div v-if="TradePairStore" v-for="(v, k) in TradePairStore" :key="k">
+            <p>{{k + '------' + v}}</p>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
     </el-col>
 
     <el-col :span="24" class="">
@@ -95,7 +113,10 @@
     data() {
       return {
         exchangeStatus: {},
-        progressData: []
+        progressData: [],
+        activeName: '',
+        OrderBookStore: '',
+        TradePairStore: '',
       }
     },
 
@@ -116,13 +137,15 @@
         this.progressData = progressData.data  // 进程数据
         if (exchangeStatus.data instanceof Object) {
           const ExchangeStatus = exchangeStatus.data.ExchangeStatusStore
+          this.OrderBookStore = exchangeStatus.data.OrderBookStore
+          this.TradePairStore = exchangeStatus.data.TradePairStore
 
           for (let v in ExchangeStatus) {
             if (typeof ExchangeStatus[v] === 'string') {
               ExchangeStatus[v] = JSON.parse(ExchangeStatus[v])
-              console.log(ExchangeStatus[v])
+              // console.log(ExchangeStatus[v])
               if (ExchangeStatus[v].depth_restart_time) {
-                ExchangeStatus[v].depth_restart_time = new Date(parseInt(ExchangeStatus[v].depth_restart_time))
+                ExchangeStatus[v].depth_restart_time = (new Date(parseInt(ExchangeStatus[v].depth_restart_time))).toLocaleString()
               }
             }
           }

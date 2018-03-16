@@ -35,6 +35,8 @@ import {
   Tag,
   TimeSelect,
   TimePicker,
+  CollapseItem,
+  Collapse
 } from 'element-ui'
 
 Vue.use(Header)
@@ -59,6 +61,8 @@ Vue.use(Aside)
 Vue.use(Progress)
 Vue.use(Pagination)
 Vue.use(DatePicker)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 // Vue.use(TimePicker)
 // element ---------------------
 

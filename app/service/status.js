@@ -37,7 +37,7 @@ class Status extends Service {
     let data = {
       ExchangeStatusStore: {},
       OrderBookStore: {},
-      // TradePairStore: {}
+      TradePairStore: {}
     }
     let keys = Object.keys(data)
     for (let i = 0, l = keys.length; i < l; i++) {
