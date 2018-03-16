@@ -142,7 +142,7 @@ export default {
             encode: {
               x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
               y: 'profit', // 将 "profit" 列映射到 Y 轴
-              tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
+              tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice', 'symbol']
             },
           }
         ]
@@ -168,7 +168,7 @@ export default {
             encode: {
               x: 'timestamp',  // 将 "timestamp" 列映射到 X 轴
               y: 'profit', // 将 "profit" 列映射到 Y 轴
-              tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice']
+              tooltip: ['timestamp', 'profit', 'sellExchange', 'sellAmount', 'sellPrice', 'buyExchange', 'buyAmount', 'buyPrice', 'symbol']
             },
           }
         ]
