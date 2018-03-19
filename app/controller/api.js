@@ -25,6 +25,12 @@ class HomeController extends Controller {
     const res = await ctx.service.trades.getProfitsPercent()
     this.ctx.body = { success: true, data: res }
   }
+  // 交易收益率分布
+  async profitsDistribution() {
+    const ctx = this.ctx
+    const res = await ctx.service.trades.getProfitsDistribution()
+    this.ctx.body = { success: true, data: res }
+  }
   // 收益汇总
   async totalProfit() {
     const ctx = this.ctx

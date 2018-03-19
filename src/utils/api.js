@@ -126,7 +126,12 @@ export default {
   getProfitsPercent(body) {
     return axios.post(`/api/profitsPercent`, body)
   },
-
+  /**
+   * 收益率分布
+   */
+  profitsDistribution(body) {
+    return axios.post(`/api/profitsDistribution`, body)
+  },
   /**
    * 获取交易所账户预览
    */

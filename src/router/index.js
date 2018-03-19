@@ -5,6 +5,7 @@ import DashBoard from '../view/DashBoard'
 import Profits from '../view/Profits'
 import ExchangeTrades from '../view/ExchangeTrades'
 import ProfitsPercent from '../view/ProfitsPercent'
+import ProfitsDistribution from '../view/ProfitsDistribution'
 import Account from '../view/Account'
 import TableCoin from '../view/TableCoin'
 import TradeStatus from '../view/TradeStatus'
@@ -48,6 +49,11 @@ export default new Router({
       path: '/ProfitsPercent',
       name: 'ProfitsPercent',
       component: ProfitsPercent
+    },
+    {
+      path: '/ProfitsDistribution',
+      name: 'ProfitsDistribution',
+      component: ProfitsDistribution
     },
     {
       path: '/tableCoin',

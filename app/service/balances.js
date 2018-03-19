@@ -2,13 +2,14 @@ const Service = require('egg').Service
 
 class BalancesService extends Service {
   // 获取余额原始数据
-  async getBalance() {
+  async getBalance(merge = true) {
     const { app, ctx } = this
     const body = ctx.request.body
     const defaults = { sort: { timestamp: 1 } }
     const argv = Object.assign({}, defaults, body)
     const data = await app.mongo.find('account_ballance_document', argv)
-    return balanceFilter(data)  // 当属据过大时，进行间隔取样
+
+    return merge ? balanceFilter(data) : data  // 当属据过大时，进行间隔取样
   }
 
   // 获取时间点余额总和
@@ -49,7 +50,7 @@ class BalancesService extends Service {
  * @param {Array} data 原数组
  * @param {Number} len 最长长度 默认为 6000
  */
-function balanceFilter (data, len = 6000) {
+function balanceFilter (data, len = 3000) {
   const l = data.length
   if (l <= len) return data
   let skip = Math.ceil(l / len)
