@@ -5,11 +5,12 @@
     <template slot="title">交易详情</template>
     <el-menu-item index="2-1"><router-link :to="{ name: 'Profits'}">收益统计</router-link></el-menu-item>
     <el-menu-item index="2-2"><router-link :to="{ name: 'ExchangeTrades'}">交易所交易详情</router-link></el-menu-item>
-    <el-submenu index="2-3">
+    <el-menu-item index="2-3"><router-link :to="{ name: 'ProfitsPercent'}">收益率统计</router-link></el-menu-item>
+    <!-- <el-submenu index="2-3">
       <template slot="title">盈利率统计</template>
       <el-menu-item index="2-3-1"><router-link :to="{ name: 'ProfitsPercent'}">折线图+饼图</router-link></el-menu-item>
       <el-menu-item index="2-3-2"><router-link :to="{ name: 'ProfitsDistribution'}">收益分布图</router-link></el-menu-item>
-    </el-submenu>
+    </el-submenu> -->
     <el-menu-item index="2-4"><router-link :to="{ name: 'TradeStatus'}">交易状态</router-link></el-menu-item>
 
   </el-submenu>
