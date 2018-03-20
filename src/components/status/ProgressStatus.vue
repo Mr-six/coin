@@ -131,8 +131,9 @@
           text: '数据加载中……'
         })
 
-        let {data: exchangeStatus} = await api.getExchangeStatus()   // 获取交易所链接状态数据
-        let {data: progressData} = await api.getProgressStatus()  // 进程数据
+        // let {data: exchangeStatus} = await api.getExchangeStatus()   // 获取交易所链接状态数据
+        // let {data: progressData} = await api.getProgressStatus()  // 进程数据
+        let [{data: exchangeStatus}, {data: progressData}] = await Promise.all([api.getExchangeStatus(), api.getProgressStatus()])
         loadingInstance.close()              // 关闭loading
         this.progressData = progressData.data  // 进程数据
         if (exchangeStatus.data instanceof Object) {

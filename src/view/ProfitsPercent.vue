@@ -119,8 +119,9 @@ export default {
         body: true,
         text: '数据加载中……'
       })                                   // 开启loading
-      let {data} = await api.getProfitsPercent(argv)   // 价格趋势
-      let {data: distribution} = await api.profitsDistribution(argv)  // 收益率分布
+      // let {data} = await api.getProfitsPercent(argv)   // 价格趋势
+      // let {data: distribution} = await api.profitsDistribution(argv)  // 收益率分布
+      let [{data}, {data: distribution}] = await Promise.all([api.getProfitsPercent(argv), api.profitsDistribution(argv)])
       loadingInstance.close()             // 关闭loading
       if (data.data && data.data.profitPercent && data.data.yields) {
         let source = data.data.profitPercent  // 原始数据 折线图

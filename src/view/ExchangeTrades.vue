@@ -126,8 +126,9 @@ export default {
         body: true,
         text: '数据加载中……'
       })
-      let {data: coinData} = await api.getCoinCost(argv)   // 货币花费
-      let {data: moneyDate} = await api.getMoneyCost(argv) // 货币花费
+      // let {data: coinData} = await api.getCoinCost(argv)   // 货币花费
+      // let {data: moneyDate} = await api.getMoneyCost(argv) // 货币花费
+      let [{data: coinData}, {data: moneyDate}] = await Promise.all([api.getCoinCost(argv), api.getMoneyCost(argv)])
       loadingInstance.close()               // 关闭loading
 
       // 货币花费数据

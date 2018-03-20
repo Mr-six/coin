@@ -120,7 +120,12 @@ export default {
         body: true,
         text: '数据加载中……'
       })                                   // 开启loading
-      let {data} = await api.getTrades(argv)   // 价格趋势
+      // let {data} = await api.getTrades(argv)   // 价格趋势
+      // let res = await api.getProfit(argv)     // 收益汇总
+      let [d1, d2] = await Promise.all([api.getTrades(argv), api.getProfit(argv)])
+      let data = d1.data
+      let res = d2
+      loadingInstance.close()             // 关闭loading
       let source = data.data               // 交易原始数据
 
       if (source.length) {
@@ -150,8 +155,6 @@ export default {
         this.profitItem.dataset = []
       }
 
-      let res = await api.getProfit(argv)     // 收益汇总
-      loadingInstance.close()             // 关闭loading
       let total = res.data.data
       if (total.length) {
         this.total = total[total.length - 1].profit

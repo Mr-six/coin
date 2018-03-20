@@ -151,8 +151,9 @@ class TradesService extends Service {
       limit: 1,
       sort: { profitRate: 1 }
     })
-    let pmax = await app.mongo.find(Mogodocument, maxProfitQuery)
-    let pmin = await app.mongo.find(Mogodocument, minProfitQuery)
+    // let pmax = await app.mongo.find(Mogodocument, maxProfitQuery)
+    // let pmin = await app.mongo.find(Mogodocument, minProfitQuery)
+    let [pmax, pmin] = await Promise.all([app.mongo.find(Mogodocument, maxProfitQuery), app.mongo.find(Mogodocument, minProfitQuery)])
     if (pmax.length && pmin.length) {
       pmax = pmax[0].profitRate // 最高收益率
       pmin = pmin[0].profitRate // 最低收益率
