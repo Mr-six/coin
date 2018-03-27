@@ -1,16 +1,19 @@
 const Service = require('egg').Service
 const merge = require('deepmerge')
 
-const Mogodocument = 'trade_pair_document'
+const Mogodocument = 'test_trade_pair_document'
 
 class TradesService extends Service {
   // 交易原始数据
   async getTrades(merge = true) {
     const { app, ctx } = this
     const body = ctx.request.body
-    const defaults = { sort: { timestamp: 1 } }
-    const argv = Object.assign({}, defaults, body)
-    const data = await app.mongo.find(Mogodocument, argv)
+    const defaults = { $sort: { timestamp: 1 } }
+    // const argv = Object.assign({}, defaults, body)
+    const pipeline = [{ $sort: { timestamp: 1 } }, { $lookup: { from: 'order_document', localField: 'buy_order', foreignField: '_id', as: 'buy_order' } }, { $unwind: { path: '$buy_order', preserveNullAndEmptyArrays: true } }, { $lookup: { from: 'order_document', localField: 'sell_order', foreignField: '_id', as: 'sell_order' } }, { $unwind: { path: '$sell_order', preserveNullAndEmptyArrays: true } }]
+    if (body.$match) pipeline.push(body)
+    const data = await app.mongo.aggregate(Mogodocument, {pipeline})
+    tradeAdapter(data)  // 数据适配
     return merge ? mergeTrades(data) : data // 当属据过大时，是否进行合并
   }
 
@@ -20,10 +23,10 @@ class TradesService extends Service {
     const body = ctx.request.body
 
     const resolvedImmediQuery = merge(body, {
-      query: { resolved: true, resolvedImmediate: true }
+      query: { resolved: true, resolved_immediate: true }
     })
     const resolvedAfterQuery = merge(body, {
-      query: { resolved: true, resolvedImmediate: false }
+      query: { resolved: true, resolved_immediate: false }
     })
     const pendingQuery = merge(body, { query: { resolved: false } })
 
@@ -53,20 +56,6 @@ class TradesService extends Service {
   async getCurrProfit() {
     const data = await this.getTrades()
     if (!data.length) return []
-    if (!data[0].profit) {
-      // 是否已经计算过收益
-      let profit = data.map((el, i) => {
-        // 当前收益
-        const currProfit =
-          el.sellPrice * el.sellAmount -
-          el.buyPrice * el.buyAmount -
-          el.sellFee -
-          el.buyFee
-        el.profit = currProfit
-        return el
-      })
-      return profit
-    }
     return data
   }
 
@@ -115,7 +104,7 @@ class TradesService extends Service {
     ]
     let profitPercent = data.map((el, i) => {
       // 当前收益
-      const percent = el.profitRate * 100
+      const percent = el.profit_rate * 100
       el.profitPercent = percent
       // 统计收益率分布
       switch (true) {
@@ -145,24 +134,24 @@ class TradesService extends Service {
     if (!data.length) return []
     const maxProfitQuery = merge(body, {
       limit: 1,
-      sort: { profitRate: -1 }
+      sort: { profit_rate: -1 }
     })
     const minProfitQuery = merge(body, {
       limit: 1,
-      sort: { profitRate: 1 }
+      sort: { profit_rate: 1 }
     })
     // let pmax = await app.mongo.find(Mogodocument, maxProfitQuery)
     // let pmin = await app.mongo.find(Mogodocument, minProfitQuery)
     let [pmax, pmin] = await Promise.all([app.mongo.find(Mogodocument, maxProfitQuery), app.mongo.find(Mogodocument, minProfitQuery)])
     if (pmax.length && pmin.length) {
-      pmax = pmax[0].profitRate // 最高收益率
-      pmin = pmin[0].profitRate // 最低收益率
+      pmax = pmax[0].profit_rate // 最高收益率
+      pmin = pmin[0].profit_rate // 最低收益率
       if (!pmax || !pmin) return []
       let range = creatRange(pmax, pmin)
       data.forEach((el, i) => {
-        const profitRate = el.profitRate
+        const profit_rate = el.profit_rate
         for (let l = range.length, j = 0; j < l; j++) {
-          if (profitRate >= range[j].min && profitRate < range[j].max) {
+          if (profit_rate >= range[j].min && profit_rate < range[j].max) {
             range[j].value++
           }
         }
@@ -270,14 +259,14 @@ function mergeTrades (data, len = 3000) {
     data.forEach((el, i) => {
       if (i === (data.length - 1)) return
       // mergePair.timestamp += el.timestamp
-      mergePair.profitRate += el.profitRate
+      mergePair.profit_rate += el.profit_rate
       mergePair.profit += el.profit
       mergePair.sellPrice += el.sellPrice
       mergePair.sellAmount += el.sellAmount
       mergePair.buyPrice += el.buyPrice
       mergePair.buyAmount += el.buyAmount
     })
-    mergePair.profitRate = mergePair.profitRate / data.length
+    mergePair.profit_rate = mergePair.profit_rate / data.length
     // mergePair.timestamp = mergePair.timestamp / data.length
     return mergePair
   }
@@ -306,4 +295,95 @@ function creatRange (pmax, pmin, rangeNum = 100) {
   return range
 }
 
+function tradeAdapter(trades) {
+  const l = trades.length
+  if(!l) return []
+  for(let i = 0; i < l; i++) {
+    let trade = trades[i]
+    if (trade.buy_order && trade.sell_order) {
+      trade.sellExchange = trade.sell_order.exchange
+      trade.sellPrice = trade.sell_order.price
+      trade.sellFilledPrice = trade.sell_order.filled_price
+      trade.sellFee = trade.sell_order.fee
+      trade.sellAmount = trade.sell_order.amount
+      trade.sellFilledAmount = trade.sell_order.filled_amount
+      trade.buyExchange = trade.buy_order.exchange
+      trade.buyPrice = trade.buy_order.price
+      trade.buyFilledPrice = trade.buy_order.filled_price
+      trade.buyFee = trade.buy_order.fee
+      trade.buyAmount = trade.buy_order.amount
+      trade.buyFilledAmount = trade.buy_order.filled_amount
+      delete trade.buy_order
+      delete trade.sell_order
+    }
+
+  }
+}
+
 module.exports = TradesService
+
+
+/*
+{ _id: 5a98ed0f1d41c84354001577,
+  timestamp: 1519971599748,
+  profit_rate: 0.0072946732707454736,
+  profit: 0.5166318079999982,
+  sellId: '',
+  sellExchange: 'bitfinex',
+  sellPrice: 11168.92,
+  sellFilledPrice: 0,
+  sellFee: 0.141367424,
+  sellAmount: 0.0064,
+  sellFilledAmount: 0,
+  buyId: '',
+  buyExchange: 'huobi',
+  buyPrice: 11044.03,
+  buyFilledPrice: 0,
+  buyFee: 0.14129676800000002,
+  buyAmount: 0.0064,
+  buyFilledAmount: 0,
+  symbol: 'BTCUSDT',
+  resolved: false,
+  resolveActions: [] }
+
+
+  { _id: 5ab9c6cc1d41c8243ec9fc03,
+  timestamp: 1519971599748,
+  profit_rate: 0.02,
+  profit: 10,
+  buy_order:
+   { _id: 5ab9c6cc1d41c8243ec9fc01,
+     timestamp: 1519971599748,
+     resolved_timestamp: 1519971591000,
+     price: 123,
+     amount: 100,
+     filled_price: 123,
+     filled_amount: 100,
+     fee: 2,
+     cost: 100,
+     symbol: 'BTCUSDT',
+     exchange: 'huobi',
+     order_id: '123',
+     side: 'buy',
+     error: { msg: 'test', process_time: 1519971591000 } },
+  sell_order:
+   { _id: 5ab9c6cc1d41c8243ec9fc02,
+     timestamp: 1519971599748,
+     resolved_timestamp: 1519971591000,
+     price: 123,
+     amount: 100,
+     filled_price: 123,
+     filled_amount: 100,
+     fee: 2,
+     cost: 100,
+     symbol: 'BTCUSDT',
+     exchange: 'okex',
+     order_id: '124',
+     side: 'sell',
+     error: { msg: 'test', process_time: 1519971591000 } },
+  symbol: 'BTCUSDT',
+  resolved: false,
+  resolved_immediate: 0,
+  resolved_timestamp: true,
+  resolveActions: [] }87
+*/

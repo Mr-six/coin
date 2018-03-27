@@ -108,7 +108,7 @@ export default {
 
     async getTrades (start, end) {
       const argv = {
-        query: {
+        $match: {
           timestamp: {
             $gte: start,
             $lt: end
