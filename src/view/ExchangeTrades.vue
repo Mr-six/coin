@@ -114,7 +114,7 @@ export default {
     async getCost (start, end) {
 
       const argv = {
-        $match: {
+        query: {
           timestamp: {
             $gte: start,
             $lt: end

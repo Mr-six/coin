@@ -108,7 +108,7 @@ export default {
 
     async getTrades (start, end) {
       const argv = {
-        $match: {
+        query: {
           timestamp: {
             $gte: start,
             $lt: end
@@ -124,6 +124,7 @@ export default {
       // let res = await api.getProfit(argv)     // 收益汇总
       let [d1, d2] = await Promise.all([api.getTrades(argv), api.getProfit(argv)])
       let data = d1.data
+      console.log(data)
       let res = d2
       loadingInstance.close()             // 关闭loading
       let source = data.data               // 交易原始数据
@@ -156,6 +157,7 @@ export default {
       }
 
       let total = res.data.data
+      console.log(total)
       if (total.length) {
         this.total = total[total.length - 1].profit
         // 收益累计表 -------------

@@ -49,7 +49,7 @@ export default {
     // 获取收益数据
     async getTradeStatus (start, end) {
       const argv = {
-        $match: {
+        query: {
           timestamp: {
             $gte: start,
             $lt: end

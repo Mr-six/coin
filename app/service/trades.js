@@ -1,18 +1,16 @@
 const Service = require('egg').Service
 const merge = require('deepmerge')
 
-const Mogodocument = 'test_trade_pair_document'
+const Mogodocument = 'trade_pair_document'
 
 class TradesService extends Service {
   // 交易原始数据
   async getTrades(merge = true) {
     const { app, ctx } = this
     const body = ctx.request.body
-    const defaults = { $sort: { timestamp: 1 } }
-    // const argv = Object.assign({}, defaults, body)
-    const pipeline = [{ $sort: { timestamp: 1 } }, { $lookup: { from: 'order_document', localField: 'buy_order', foreignField: '_id', as: 'buy_order' } }, { $unwind: { path: '$buy_order', preserveNullAndEmptyArrays: true } }, { $lookup: { from: 'order_document', localField: 'sell_order', foreignField: '_id', as: 'sell_order' } }, { $unwind: { path: '$sell_order', preserveNullAndEmptyArrays: true } }]
-    if (body.$match) pipeline.push(body)
-    const data = await app.mongo.aggregate(Mogodocument, {pipeline})
+    const defaults = { sort: { timestamp: 1 } }
+    const argv = Object.assign({}, defaults, body)
+    const data = await app.mongo.find(Mogodocument, argv)
     tradeAdapter(data)  // 数据适配
     return merge ? mergeTrades(data) : data // 当属据过大时，是否进行合并
   }
@@ -63,11 +61,7 @@ class TradesService extends Service {
   async getTotalProfit() {
     const data = await this.getTrades()
     let total = data.map((el, i) => {
-      const currProfit =
-        el.sellPrice * el.sellAmount -
-        el.buyPrice * el.buyAmount -
-        el.sellFee -
-        el.buyFee // 当前收益
+      const currProfit = el.profit
       if (i === 0) {
         el.profit = currProfit
       } else {
